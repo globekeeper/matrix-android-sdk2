@@ -52,9 +52,9 @@ android {
     buildTypes {
         debug {
             // Set to true to log privacy or sensible data, such as token
-            buildConfigField "boolean", "LOG_PRIVATE_DATA", project.property("vector.debugPrivateData")
+            buildConfigField "boolean", "LOG_PRIVATE_DATA", "true"
             // Set to BODY instead of NONE to enable logging
-            buildConfigField "okhttp3.logging.HttpLoggingInterceptor.Level", "OKHTTP_LOGGING_LEVEL", "okhttp3.logging.HttpLoggingInterceptor.Level." + project.property("vector.httpLogLevel")
+            buildConfigField "okhttp3.logging.HttpLoggingInterceptor.Level", "OKHTTP_LOGGING_LEVEL", "okhttp3.logging.HttpLoggingInterceptor.Level." + "BODY"
         }
 
         release {
@@ -115,6 +115,7 @@ dependencies {
     def daggerVersion = '2.31'
     def work_version = '2.4.0'
     def retrofit_version = '2.6.2'
+    def kotlin_coroutines_version = "1.4.1"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
