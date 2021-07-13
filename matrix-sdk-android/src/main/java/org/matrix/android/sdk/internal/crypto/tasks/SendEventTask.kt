@@ -42,13 +42,14 @@ internal class DefaultSendEventTask @Inject constructor(
     override suspend fun execute(params: SendEventTask.Params): String {
         try {
             // Make sure to load all members in the room before sending the event.
-            params.event.roomId
+            /*params.event.roomId
                     ?.takeIf { params.encrypt }
                     ?.let { roomId ->
                         loadRoomMembersTask.execute(LoadRoomMembersTask.Params(roomId))
                     }
 
-            val event = handleEncryption(params)
+            val event = handleEncryption(params)*/
+            val event = params.event
             val localId = event.eventId!!
             localEchoRepository.updateSendState(localId, params.event.roomId, SendState.SENDING)
             val response = executeRequest(globalErrorReceiver) {
