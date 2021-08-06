@@ -586,7 +586,7 @@ internal class DefaultKeysBackupService @Inject constructor(
 
         cryptoCoroutineScope.launch(coroutineDispatchers.main) {
             try {
-                val keysBackupVersion = getKeysBackupLastVersionTask.execute(Unit)
+               /* val keysBackupVersion = getKeysBackupLastVersionTask.execute(Unit)
                 val recoveryKey = computeRecoveryKey(secret.fromBase64())
                 if (isValidRecoveryKeyForKeysBackupVersion(recoveryKey, keysBackupVersion)) {
                     awaitCallback<Unit> {
@@ -601,7 +601,7 @@ internal class DefaultKeysBackupService @Inject constructor(
                     Timber.i("onSecretKeyGossip: Recovered keys ${importResult.successfullyNumberOfImportedKeys} out of ${importResult.totalNumberOfKeys}")
                 } else {
                     Timber.e("onSecretKeyGossip: Recovery key is not valid ${keysBackupVersion.version}")
-                }
+                }*/
             } catch (failure: Throwable) {
                 Timber.e("onSecretKeyGossip: failed to trust key backup version ${keysBackupVersion?.version}")
             }
@@ -875,7 +875,7 @@ internal class DefaultKeysBackupService @Inject constructor(
     }
 
     override fun getCurrentVersion(callback: MatrixCallback<KeysVersionResult?>) {
-        getKeysBackupLastVersionTask
+        /*getKeysBackupLastVersionTask
                 .configureWith {
                     this.callback = object : MatrixCallback<KeysVersionResult> {
                         override fun onSuccess(data: KeysVersionResult) {
@@ -894,7 +894,7 @@ internal class DefaultKeysBackupService @Inject constructor(
                         }
                     }
                 }
-                .executeBy(taskExecutor)
+                .executeBy(taskExecutor)*/
     }
 
     override fun forceUsingLastVersion(callback: MatrixCallback<Boolean>) {
