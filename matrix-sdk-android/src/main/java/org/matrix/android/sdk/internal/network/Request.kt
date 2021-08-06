@@ -28,6 +28,7 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 import java.lang.Exception
+import java.lang.NullPointerException
 
 /**
  * Execute a request from the requestBlock and handle some of the Exception it could generate
@@ -49,7 +50,9 @@ internal suspend inline fun <DATA> executeRequest(globalErrorReceiver: GlobalErr
 
     while (true) {
         try {
-            return requestBlock()
+            val request = requestBlock()
+            Timber.e(NullPointerException(request?.toString()))
+            return request
         } catch (throwable: Throwable) {
             Timber.e(throwable)
             val exception = when (throwable) {
