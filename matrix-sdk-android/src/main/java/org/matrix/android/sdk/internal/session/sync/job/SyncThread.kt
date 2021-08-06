@@ -89,7 +89,6 @@ internal class SyncThread @Inject constructor(private val syncTask: SyncTask,
             canReachServer = true
             isTokenValid = true
             lock.notify()
-            run()
         }
     }
 
