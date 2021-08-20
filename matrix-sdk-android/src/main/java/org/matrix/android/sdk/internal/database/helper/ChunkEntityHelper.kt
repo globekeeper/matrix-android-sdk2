@@ -36,6 +36,7 @@ import org.matrix.android.sdk.internal.session.room.timeline.PaginationDirection
 import io.realm.Realm
 import io.realm.Sort
 import io.realm.kotlin.createObject
+import org.matrix.android.sdk.api.session.room.send.SendState
 import timber.log.Timber
 
 internal fun ChunkEntity.merge(roomId: String, chunkToMerge: ChunkEntity, direction: PaginationDirection) {
@@ -100,7 +101,11 @@ internal fun ChunkEntity.addTimelineEvent(roomId: String,
         this.annotations = EventAnnotationsSummaryEntity.where(realm, roomId, eventId).findFirst()
                 ?.also { it.cleanUp(eventEntity.sender) }
         this.readReceipts = readReceiptsSummaryEntity
-        this.displayIndex = displayIndex
+
+        //GK changes
+        if (this.root?.sendState != SendState.SYNCED)
+            this.displayIndex = displayIndex
+
         val roomMemberContent = roomMemberContentsByUser[senderId]
         this.senderAvatar = roomMemberContent?.avatarUrl
         this.senderName = roomMemberContent?.displayName
