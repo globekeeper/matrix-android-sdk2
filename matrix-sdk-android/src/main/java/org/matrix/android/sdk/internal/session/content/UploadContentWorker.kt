@@ -418,8 +418,8 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
             val updatedContent = when (messageContent) {
                 is MessageImageContent -> messageContent.update(url, encryptedFileInfo, newAttachmentAttributes)
                 is MessageVideoContent -> messageContent.update(url, encryptedFileInfo, thumbnailUrl, thumbnailEncryptedFileInfo, newAttachmentAttributes)
-                is MessageFileContent  -> messageContent.update(url, encryptedFileInfo, newAttachmentAttributes.newFileSize)
-                is MessageAudioContent -> messageContent.update(url, encryptedFileInfo, newAttachmentAttributes.newFileSize)
+                is MessageFileContent  -> messageContent.update(url, encryptedFileInfo, newAttachmentAttributes)
+                is MessageAudioContent -> messageContent.update(url, encryptedFileInfo, newAttachmentAttributes)
                 else                   -> messageContent
             }
 
@@ -469,21 +469,23 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
 
     private fun MessageFileContent.update(url: String,
                                           encryptedFileInfo: EncryptedFileInfo?,
-                                          size: Long): MessageFileContent {
+                                          newAttachmentAttributes: NewAttachmentAttributes?): MessageFileContent {
         return copy(
                 url = if (encryptedFileInfo == null) url else null,
                 encryptedFileInfo = encryptedFileInfo?.copy(url = url),
-                info = info?.copy(size = size)
+                info = info?.copy(size = newAttachmentAttributes?.newFileSize ?: 0),
+                location = newAttachmentAttributes?.locationJson?.toContent()
         )
     }
 
     private fun MessageAudioContent.update(url: String,
                                            encryptedFileInfo: EncryptedFileInfo?,
-                                           size: Long): MessageAudioContent {
+                                           newAttachmentAttributes: NewAttachmentAttributes?): MessageAudioContent {
         return copy(
                 url = if (encryptedFileInfo == null) url else null,
                 encryptedFileInfo = encryptedFileInfo?.copy(url = url),
-                audioInfo = audioInfo?.copy(size = size)
+                audioInfo = audioInfo?.copy(size = newAttachmentAttributes?.newFileSize ?: 0),
+                location = newAttachmentAttributes?.locationJson?.toContent()
         )
     }
 
