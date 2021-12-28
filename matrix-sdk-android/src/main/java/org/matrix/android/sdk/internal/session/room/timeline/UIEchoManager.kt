@@ -70,8 +70,7 @@ internal class UIEchoManager(
         return existingState != sendState
     }
 
-    // return true if should update
-    fun onLocalEchoCreated(timelineEvent: TimelineEvent): Boolean {
+    fun onLocalEchoCreated(timelineEvent: TimelineEvent) {
         var postSnapshot = false
 
         // Manage some ui echos (do it before filter because actual event could be filtered out)
@@ -91,21 +90,15 @@ internal class UIEchoManager(
                                             reaction = reaction
                                     )
                             )
-                    postSnapshot = listener.rebuildEvent(relatedEventID) {
+                    listener.rebuildEvent(relatedEventID) {
                         decorateEventWithReactionUiEcho(it)
-                    } || postSnapshot
+                    }
                 }
             }
         }
 
-        // do not add events that would have been filtered
-        if (listOf(timelineEvent).filterEventsWithSettings(settings).isNotEmpty()) {
-            Timber.v("On local echo created: ${timelineEvent.eventId}")
-            inMemorySendingEvents.add(0, timelineEvent)
-            postSnapshot = true
-        }
-
-        return postSnapshot
+        Timber.v("On local echo created: ${timelineEvent.eventId}")
+        inMemorySendingEvents.add(0, timelineEvent)
     }
 
     fun decorateEventWithReactionUiEcho(timelineEvent: TimelineEvent): TimelineEvent? {
