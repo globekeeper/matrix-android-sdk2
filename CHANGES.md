@@ -1,5 +1,39 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.3.10 (2021-12-14)
+===================================================
+
+Imported from Element 1.3.10. (https://github.com/vector-im/element-android/releases/tag/v1.3.10)
+
+SDK API changes ⚠️
+------------------
+
+You will have to add a maven repository in your main build.gradle file:
+```groovy
+    // For olm library.
+    maven { url 'https://gitlab.matrix.org/api/v4/projects/27/packages/maven' }
+```
+
+- New API TermsService.getHomeserverTerms() to get the terms of service from a homeserver
+- API SendService.sendOptionsReply() is replaced by SendService.voteToPoll()
+- New API SendService.endPoll()
+
+Changes in Matrix-SDK 1.3.9 (2021-12-01)
+===================================================
+
+Imported from Element 1.3.9. (https://github.com/vector-im/element-android/releases/tag/v1.3.9)
+
+Changes in Matrix-SDK 1.3.8 (2021-11-17)
+===================================================
+
+Imported from Element 1.3.8. (https://github.com/vector-im/element-android/releases/tag/v1.3.8)
+
+SDK API changes ⚠️
+------------------
+ - Add content scanner API from MSC1453
+  API documentation : https://github.com/matrix-org/matrix-content-scanner#api ([#4392](https://github.com/vector-im/element-android/issues/4392))
+ - Breaking SDK API change to PushRuleListener, the separated callbacks have been merged into one with a data class which includes all the previously separated push information ([#4401](https://github.com/vector-im/element-android/issues/4401))
+
 Changes in Matrix-SDK 1.3.7 (2021-11-05)
 ===================================================
 

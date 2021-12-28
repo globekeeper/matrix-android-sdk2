@@ -408,7 +408,13 @@ internal class DefaultAuthenticationService @Inject constructor(
                                               password: String,
                                               initialDeviceName: String,
                                               deviceId: String?): Session {
-        return directLoginTask.execute(DirectLoginTask.Params(homeServerConnectionConfig, matrixId, password, initialDeviceName, deviceId))
+        return directLoginTask.execute(DirectLoginTask.Params(
+                homeServerConnectionConfig = homeServerConnectionConfig,
+                userId = matrixId,
+                password = password,
+                deviceName = initialDeviceName,
+                deviceId = deviceId
+        ))
     }
 
     override suspend fun directTokenAuthentication(

@@ -19,6 +19,8 @@ package org.matrix.android.sdk.api.failure
 import org.matrix.android.sdk.api.auth.registration.RegistrationAvailability
 import org.matrix.android.sdk.api.auth.registration.RegistrationFlowResponse
 import org.matrix.android.sdk.api.extensions.tryOrNull
+import org.matrix.android.sdk.api.session.contentscanner.ContentScannerError
+import org.matrix.android.sdk.api.session.contentscanner.ScanFailure
 import org.matrix.android.sdk.internal.di.MoshiProvider
 import java.io.IOException
 import javax.net.ssl.HttpsURLConnection
@@ -100,4 +102,20 @@ fun Throwable.isRegistrationAvailabilityError(): Boolean {
             (error.code == MatrixError.M_USER_IN_USE ||
             error.code == MatrixError.M_INVALID_USERNAME ||
             error.code == MatrixError.M_EXCLUSIVE)
+}
+
+/**
+ * Try to convert to a ScanFailure. Return null in the cases it's not possible
+ */
+fun Throwable.toScanFailure(): ScanFailure? {
+    return if (this is Failure.OtherServerError) {
+        tryOrNull {
+            MoshiProvider.providesMoshi()
+                    .adapter(ContentScannerError::class.java)
+                    .fromJson(errorBody)
+        }
+                ?.let { ScanFailure(it, httpCode, this) }
+    } else {
+        null
+    }
 }
