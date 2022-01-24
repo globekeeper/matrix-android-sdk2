@@ -160,12 +160,13 @@ internal class MxCallImpl(
         state = CallState.Ended(reason = EndCallReason.USER_HANGUP)
     }
 
-    override fun hangUp(reason: EndCallReason?) {
+    override fun hangUp(reason: EndCallReason?, duration: Long?) {
         Timber.tag(loggerTag.value).v("hangup $callId")
         CallHangupContent(
                 callId = callId,
                 partyId = ourPartyId,
                 reason = reason,
+                duration = duration,
                 version = MxCall.VOIP_PROTO_VERSION.toString()
         )
                 .let { createEventAndLocalEcho(type = EventType.CALL_HANGUP, roomId = roomId, content = it.toContent()) }

@@ -69,7 +69,7 @@ interface MxCall : MxCallDetail {
     /**
      * End the call
      */
-    fun hangUp(reason: EndCallReason? = null)
+    fun hangUp(reason: EndCallReason? = null, duration: Long? = null)
 
     /**
      * Start a call

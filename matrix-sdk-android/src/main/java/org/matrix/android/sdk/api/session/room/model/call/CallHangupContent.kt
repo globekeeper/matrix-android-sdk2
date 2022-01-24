@@ -43,5 +43,9 @@ data class CallHangupContent(
          * or `invite_timeout` for when the other party did not answer in time.
          * One of: ["ice_failed", "invite_timeout"]
          */
-        @Json(name = "reason") val reason: EndCallReason? = null
+        @Json(name = "reason") val reason: EndCallReason? = null,
+        /**
+         * Optional duration of the call, would be available only for `user_hangup` reason.
+         */
+        @Json(name = "duration") val duration: Long? = null
 ) : CallSignalingContent
