@@ -22,6 +22,7 @@ import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.room.model.message.MessageType
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
 import org.matrix.android.sdk.api.util.Cancelable
+import org.matrix.android.sdk.internal.session.media.GKLocation
 
 /**
  * This interface defines methods to send events in a room. It's implemented at the room level.
@@ -128,8 +129,9 @@ interface SendService {
     /**
      * Schedule this message to be resent
      * @param localEcho the unsent local echo
+     * @param gkLocation the unsent Location
      */
-    fun resendMediaMessage(localEcho: TimelineEvent): Cancelable
+    fun resendMediaMessage(localEcho: TimelineEvent, gkLocation: GKLocation? = null): Cancelable
 
     /**
      * Remove this failed message from the timeline

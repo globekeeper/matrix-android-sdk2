@@ -49,6 +49,7 @@ import org.matrix.android.sdk.internal.crypto.CryptoSessionInfoProvider
 import org.matrix.android.sdk.internal.di.SessionId
 import org.matrix.android.sdk.internal.di.WorkManagerProvider
 import org.matrix.android.sdk.internal.session.content.UploadContentWorker
+import org.matrix.android.sdk.internal.session.media.GKLocation
 import org.matrix.android.sdk.internal.session.room.send.queue.EventSenderProcessor
 import org.matrix.android.sdk.internal.task.TaskExecutor
 import org.matrix.android.sdk.internal.util.CancelableWork
@@ -136,7 +137,7 @@ internal class DefaultSendService @AssistedInject constructor(
         return NoOpCancellable
     }
 
-    override fun resendMediaMessage(localEcho: TimelineEvent): Cancelable {
+    override fun resendMediaMessage(localEcho: TimelineEvent, gkLocation: GKLocation?): Cancelable {
         if (localEcho.root.sendState.hasFailed()) {
             val clearContent = localEcho.root.getClearContent()
             val messageContent = clearContent?.toModel<MessageContent>() as? MessageWithAttachmentContent ?: return NoOpCancellable
@@ -159,7 +160,8 @@ internal class DefaultSendService @AssistedInject constructor(
                             height = messageContent.info.height.toLong(),
                             name = messageContent.body,
                             queryUri = Uri.parse(messageContent.url),
-                            type = ContentAttachmentData.Type.IMAGE
+                            type = ContentAttachmentData.Type.IMAGE,
+                            locationJson = gkLocation
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
                     internalSendMedia(listOf(localEcho.root), attachmentData, true)
@@ -173,7 +175,8 @@ internal class DefaultSendService @AssistedInject constructor(
                             duration = messageContent.videoInfo?.duration?.toLong(),
                             name = messageContent.body,
                             queryUri = Uri.parse(messageContent.url),
-                            type = ContentAttachmentData.Type.VIDEO
+                            type = ContentAttachmentData.Type.VIDEO,
+                            locationJson = gkLocation
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
                     internalSendMedia(listOf(localEcho.root), attachmentData, true)
@@ -184,7 +187,8 @@ internal class DefaultSendService @AssistedInject constructor(
                             mimeType = messageContent.mimeType,
                             name = messageContent.getFileName(),
                             queryUri = Uri.parse(messageContent.url),
-                            type = ContentAttachmentData.Type.FILE
+                            type = ContentAttachmentData.Type.FILE,
+                            locationJson = gkLocation
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
                     internalSendMedia(listOf(localEcho.root), attachmentData, true)
@@ -197,7 +201,8 @@ internal class DefaultSendService @AssistedInject constructor(
                             name = messageContent.body,
                             queryUri = Uri.parse(messageContent.url),
                             type = ContentAttachmentData.Type.AUDIO,
-                            waveform = messageContent.audioWaveformInfo?.waveform?.filterNotNull()
+                            waveform = messageContent.audioWaveformInfo?.waveform?.filterNotNull(),
+                            locationJson = gkLocation
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
                     internalSendMedia(listOf(localEcho.root), attachmentData, true)
