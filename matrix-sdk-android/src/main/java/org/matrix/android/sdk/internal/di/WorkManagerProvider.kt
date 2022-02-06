@@ -102,7 +102,8 @@ internal class WorkManagerProvider @Inject constructor(
          * Default constraints: connected network
          */
         val workConstraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
+            //TODO GK check if the logic doesn't break anything
+            //.setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
 
         // Use min value, smaller value will be ignored

@@ -20,6 +20,7 @@ package org.matrix.android.sdk.internal.network
 
 import com.squareup.moshi.JsonEncodingException
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.withTimeout
 import okhttp3.ResponseBody
 import org.matrix.android.sdk.api.extensions.orFalse
 import org.matrix.android.sdk.api.failure.Failure
@@ -32,12 +33,11 @@ import timber.log.Timber
 import java.io.IOException
 import java.net.HttpURLConnection
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
-internal suspend fun okhttp3.Call.awaitResponse(): okhttp3.Response {
-    return suspendCancellableCoroutine { continuation ->
+internal suspend fun okhttp3.Call.awaitResponse(): okhttp3.Response = withTimeout(40000) {
+    suspendCancellableCoroutine { continuation ->
         continuation.invokeOnCancellation {
-            cancel()
+            continuation.cancel(it)
         }
 
         enqueue(object : okhttp3.Callback {
@@ -46,7 +46,9 @@ internal suspend fun okhttp3.Call.awaitResponse(): okhttp3.Response {
             }
 
             override fun onFailure(call: okhttp3.Call, e: IOException) {
-                continuation.resumeWithException(e)
+                //TODO GK check if the logic doesn't break anything
+                continuation.cancel(e)
+                //continuation.resumeWithException(e)
             }
         })
     }
