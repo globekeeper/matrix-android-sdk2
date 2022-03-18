@@ -68,7 +68,7 @@ internal class DefaultStateService @AssistedInject constructor(@Assisted private
 
     override suspend fun sendStateEvent(
             eventType: String,
-            stateKey: String?,
+            stateKey: String,
             body: JsonDict
     ) {
         val params = SendStateTask.Params(
@@ -102,7 +102,7 @@ internal class DefaultStateService @AssistedInject constructor(@Assisted private
         sendStateEvent(
                 eventType = EventType.STATE_ROOM_TOPIC,
                 body = mapOf("topic" to topic),
-                stateKey = null
+                stateKey = ""
         )
     }
 
@@ -110,7 +110,7 @@ internal class DefaultStateService @AssistedInject constructor(@Assisted private
         sendStateEvent(
                 eventType = EventType.STATE_ROOM_NAME,
                 body = mapOf("name" to name),
-                stateKey = null
+                stateKey = ""
         )
     }
 
@@ -127,7 +127,7 @@ internal class DefaultStateService @AssistedInject constructor(@Assisted private
                                 // Sort for the cleanup
                                 .sorted()
                 ).toContent(),
-                stateKey = null
+                stateKey = ""
         )
     }
 
@@ -135,7 +135,7 @@ internal class DefaultStateService @AssistedInject constructor(@Assisted private
         sendStateEvent(
                 eventType = EventType.STATE_ROOM_HISTORY_VISIBILITY,
                 body = mapOf("history_visibility" to readability),
-                stateKey = null
+                stateKey = ""
         )
     }
 
@@ -152,14 +152,14 @@ internal class DefaultStateService @AssistedInject constructor(@Assisted private
             sendStateEvent(
                     eventType = EventType.STATE_ROOM_JOIN_RULES,
                     body = body,
-                    stateKey = null
+                    stateKey = ""
             )
         }
         if (guestAccess != null) {
             sendStateEvent(
                     eventType = EventType.STATE_ROOM_GUEST_ACCESS,
                     body = mapOf("guest_access" to guestAccess),
-                    stateKey = null
+                    stateKey = ""
             )
         }
     }
@@ -169,7 +169,7 @@ internal class DefaultStateService @AssistedInject constructor(@Assisted private
         sendStateEvent(
                 eventType = EventType.STATE_ROOM_AVATAR,
                 body = mapOf("url" to response.contentUri),
-                stateKey = null
+                stateKey = ""
         )
     }
 
@@ -177,7 +177,7 @@ internal class DefaultStateService @AssistedInject constructor(@Assisted private
         sendStateEvent(
                 eventType = EventType.STATE_ROOM_AVATAR,
                 body = emptyMap(),
-                stateKey = null
+                stateKey = ""
         )
     }
 

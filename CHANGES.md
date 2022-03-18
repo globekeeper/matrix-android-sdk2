@@ -1,5 +1,32 @@
 Please also refer to the Changelog of Element Android: https://github.com/vector-im/element-android/blob/main/CHANGES.md
 
+Changes in Matrix-SDK 1.4.2 (2022-02-28)
+===================================================
+
+SDK API changes ⚠️
+------------------
+ - `join` and `leave` methods moved from MembershipService to RoomService and SpaceService to split logic for rooms and spaces ([#5183](https://github.com/vector-im/element-android/issues/5183))
+ - Deprecates Matrix.initialize and Matrix.getInstance in favour of the client providing its own singleton instance via Matrix.createInstance ([#5185](https://github.com/vector-im/element-android/issues/5185))
+ - Adds support for MSC3283, additional homeserver capabilities ([#5207](https://github.com/vector-im/element-android/issues/5207))
+
+
+Changes in Matrix-SDK 1.3.18 (2022-02-04)
+===================================================
+
+**Warning**: This release may trigger an initial sync.
+
+Imported from Element 1.3.18. (https://github.com/vector-im/element-android/releases/tag/v1.3.18)
+
+Bugfixes 🐛
+----------
+ - Avoid deleting root event of CurrentState on gappy sync. In order to restore lost Events an initial sync may be triggered. ([#5137](https://github.com/vector-im/element-android/issues/5137))
+
+SDK API changes ⚠️
+------------------
+ - `StateService.sendStateEvent()` now takes a non-nullable String for the parameter `stateKey`. If null was used, just now use an empty string. ([#4895](https://github.com/vector-im/element-android/issues/4895))
+ - 429 are not automatically retried anymore in case of too long retry delay ([#4995](https://github.com/vector-im/element-android/issues/4995))
+
+
 Changes in Matrix-SDK 1.3.14 (2022-01-12)
 ===================================================
 

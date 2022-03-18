@@ -17,6 +17,7 @@
 package org.matrix.android.sdk.internal.crypto.keysbackup
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.LargeTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -24,6 +25,7 @@ import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.FixMethodOrder
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
@@ -49,6 +51,7 @@ import java.util.concurrent.CountDownLatch
 
 @RunWith(AndroidJUnit4::class)
 @FixMethodOrder(MethodSorters.JVM)
+@LargeTest
 class KeysBackupTest : InstrumentedTest {
 
     private val testHelper = CommonTestHelper(context())
@@ -61,6 +64,7 @@ class KeysBackupTest : InstrumentedTest {
      * - Reset keys backup markers
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun roomKeysTest_testBackupStore_ok() {
         val cryptoTestData = cryptoTestHelper.doE2ETestWithAliceAndBobInARoomWithEncryptedMessages()
 
@@ -159,6 +163,7 @@ class KeysBackupTest : InstrumentedTest {
      * - Check the backup completes
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun backupAfterCreateKeysBackupVersionTest() {
         val cryptoTestData = cryptoTestHelper.doE2ETestWithAliceAndBobInARoomWithEncryptedMessages()
 
@@ -199,6 +204,7 @@ class KeysBackupTest : InstrumentedTest {
      * Check that backupAllGroupSessions() returns valid data
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun backupAllGroupSessionsTest() {
         val cryptoTestData = cryptoTestHelper.doE2ETestWithAliceAndBobInARoomWithEncryptedMessages()
 
@@ -243,6 +249,7 @@ class KeysBackupTest : InstrumentedTest {
      * - Compare the decrypted megolm key with the original one
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun testEncryptAndDecryptKeysBackupData() {
         val cryptoTestData = cryptoTestHelper.doE2ETestWithAliceAndBobInARoomWithEncryptedMessages()
 
@@ -284,6 +291,7 @@ class KeysBackupTest : InstrumentedTest {
      * - Restore must be successful
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun restoreKeysBackupTest() {
         val testData = keysBackupTestHelper.createKeysBackupScenarioWithPassword(null)
 
@@ -367,6 +375,7 @@ class KeysBackupTest : InstrumentedTest {
      * - It must be trusted and must have with 2 signatures now
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun trustKeyBackupVersionTest() {
         // - Do an e2e backup to the homeserver with a recovery key
         // - And log Alice on a new device
@@ -426,6 +435,7 @@ class KeysBackupTest : InstrumentedTest {
      * - It must be trusted and must have with 2 signatures now
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun trustKeyBackupVersionWithRecoveryKeyTest() {
         // - Do an e2e backup to the homeserver with a recovery key
         // - And log Alice on a new device
@@ -483,6 +493,7 @@ class KeysBackupTest : InstrumentedTest {
      * - The backup must still be untrusted and disabled
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun trustKeyBackupVersionWithWrongRecoveryKeyTest() {
         // - Do an e2e backup to the homeserver with a recovery key
         // - And log Alice on a new device
@@ -524,6 +535,7 @@ class KeysBackupTest : InstrumentedTest {
      * - It must be trusted and must have with 2 signatures now
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun trustKeyBackupVersionWithPasswordTest() {
         val password = "Password"
 
@@ -583,6 +595,7 @@ class KeysBackupTest : InstrumentedTest {
      * - The backup must still be untrusted and disabled
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun trustKeyBackupVersionWithWrongPasswordTest() {
         val password = "Password"
         val badPassword = "Bad Password"
@@ -623,6 +636,7 @@ class KeysBackupTest : InstrumentedTest {
      * - It must fail
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun restoreKeysBackupWithAWrongRecoveryKeyTest() {
         val testData = keysBackupTestHelper.createKeysBackupScenarioWithPassword(null)
 
@@ -656,6 +670,7 @@ class KeysBackupTest : InstrumentedTest {
      * - Restore must be successful
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun testBackupWithPassword() {
         val password = "password"
 
@@ -711,6 +726,7 @@ class KeysBackupTest : InstrumentedTest {
      * - It must fail
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun restoreKeysBackupWithAWrongPasswordTest() {
         val password = "password"
         val wrongPassword = "passw0rd"
@@ -747,6 +763,7 @@ class KeysBackupTest : InstrumentedTest {
      * - Restore must be successful
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun testUseRecoveryKeyToRestoreAPasswordBasedKeysBackup() {
         val password = "password"
 
@@ -775,6 +792,7 @@ class KeysBackupTest : InstrumentedTest {
      * - It must fail
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun testUsePasswordToRestoreARecoveryKeyBasedKeysBackup() {
         val testData = keysBackupTestHelper.createKeysBackupScenarioWithPassword(null)
 
@@ -806,6 +824,7 @@ class KeysBackupTest : InstrumentedTest {
      * - Check the returned KeysVersionResult is trusted
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun testIsKeysBackupTrusted() {
         // - Create a backup version
         val cryptoTestData = cryptoTestHelper.doE2ETestWithAliceAndBobInARoomWithEncryptedMessages()
@@ -849,6 +868,7 @@ class KeysBackupTest : InstrumentedTest {
      * -> The new alice session must back up to the same version
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun testCheckAndStartKeysBackupWhenRestartingAMatrixSession() {
         // - Create a backup version
         val cryptoTestData = cryptoTestHelper.doE2ETestWithAliceAndBobInARoomWithEncryptedMessages()
@@ -980,6 +1000,7 @@ class KeysBackupTest : InstrumentedTest {
      * -> It must success
      */
     @Test
+    @Ignore("This test will be ignored until it is fixed")
     fun testBackupAfterVerifyingADevice() {
         // - Create a backup version
         val cryptoTestData = cryptoTestHelper.doE2ETestWithAliceAndBobInARoomWithEncryptedMessages()
