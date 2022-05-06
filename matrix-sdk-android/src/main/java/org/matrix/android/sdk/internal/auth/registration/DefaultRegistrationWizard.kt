@@ -85,7 +85,7 @@ internal class DefaultRegistrationWizard(
     override suspend fun createGKAccount(clientSecret: String,
                                          sid: String,
                                          id_server: String,
-                                         userName: String,
+                                         userName: String?,
                                          deviceId: String,
                                          password: String): RegistrationResult {
         val safeSession = pendingSessionData.currentSession
