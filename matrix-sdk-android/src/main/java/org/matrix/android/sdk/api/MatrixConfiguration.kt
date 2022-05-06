@@ -65,7 +65,11 @@ data class MatrixConfiguration(
         /**
          * Optional interceptor for http client.
          */
-        val additionalNetworkInterceptor: Interceptor? = null
+        val additionalNetworkInterceptor: Interceptor? = null,
+        /**
+         * Thread messages default enable/disabled value
+         */
+        val threadMessagesEnabledDefault: Boolean = false,
 ) {
 
     /**

@@ -30,6 +30,12 @@ Latest version: [![Latest version](https://img.shields.io/jitpack/v/github/globe
 
 You need to add Jitpack as a repository in your main build.gradle file. Please follow instructions here: https://jitpack.io/#globekeeper/matrix-android-sdk2
 
+### API documentation
+
+The Matrix Android SDK2 API documentation can be found here: https://matrix-org.github.io/matrix-android-sdk2
+
+We are currently working to improve it.
+
 ### Sample application
 
 You can have a look on the sample app we have written to help starting with the new SDK: https://github.com/matrix-org/matrix-android-sdk2-sample.

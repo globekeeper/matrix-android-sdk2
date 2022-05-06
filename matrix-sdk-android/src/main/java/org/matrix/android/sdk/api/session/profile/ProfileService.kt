@@ -21,6 +21,7 @@ import android.net.Uri
 import androidx.lifecycle.LiveData
 import org.matrix.android.sdk.api.auth.UserInteractiveAuthInterceptor
 import org.matrix.android.sdk.api.session.identity.ThreePid
+import org.matrix.android.sdk.api.session.user.model.User
 import org.matrix.android.sdk.api.util.JsonDict
 import org.matrix.android.sdk.api.util.Optional
 
@@ -123,4 +124,17 @@ interface ProfileService {
      * Remove a 3Pid from the Matrix account.
      */
     suspend fun deleteThreePid(threePid: ThreePid)
+
+    /**
+     * Return a User object from a userId
+     */
+    suspend fun getProfileAsUser(userId: String): User {
+        return getProfile(userId).let { dict ->
+            User(
+                    userId = userId,
+                    displayName = dict[DISPLAY_NAME_KEY] as? String,
+                    avatarUrl = dict[AVATAR_URL_KEY] as? String
+            )
+        }
+    }
 }
