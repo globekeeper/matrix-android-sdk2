@@ -22,7 +22,7 @@ interface FilterService {
         NoFilter,
 
         /**
-         * Filter for Element, will include only known event type
+         * Filter for Element, will include only known event type.
          */
         ElementFilter,
 
@@ -33,7 +33,7 @@ interface FilterService {
     }
 
     /**
-     * Configure the filter for the sync
+     * Configure the filter for the sync.
      */
     fun setFilter(filterPreset: FilterPreset)
 }

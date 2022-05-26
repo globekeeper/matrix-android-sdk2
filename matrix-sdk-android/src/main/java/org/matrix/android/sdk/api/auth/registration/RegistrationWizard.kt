@@ -16,6 +16,7 @@
 
 package org.matrix.android.sdk.api.auth.registration
 
+import org.matrix.android.sdk.api.util.JsonDict
 import org.matrix.android.sdk.api.auth.data.LoginFlowTypes
 
 /**
@@ -81,6 +82,13 @@ interface RegistrationWizard {
      * Perform the "m.login.dummy" stage.
      */
     suspend fun dummy(): RegistrationResult
+
+    /**
+     * Perform custom registration stage by sending a custom JsonDict.
+     * Current registration "session" param will be included into authParams by default.
+     * The authParams should contain at least one entry "type" with a String value.
+     */
+    suspend fun registrationCustom(authParams: JsonDict): RegistrationResult
 
     /**
      * Perform the "m.login.email.identity" or "m.login.msisdn" stage.

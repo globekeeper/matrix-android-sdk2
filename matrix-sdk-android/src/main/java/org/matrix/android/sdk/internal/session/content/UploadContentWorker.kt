@@ -47,6 +47,7 @@ import org.matrix.android.sdk.internal.session.room.send.LocalEchoIdentifiers
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoRepository
 import org.matrix.android.sdk.internal.session.room.send.MultipleEventSendingDispatcherWorker
 import org.matrix.android.sdk.internal.util.TemporaryFileCreator
+import org.matrix.android.sdk.internal.util.time.Clock
 import org.matrix.android.sdk.internal.util.toMatrixErrorStr
 import org.matrix.android.sdk.internal.worker.SessionSafeCoroutineWorker
 import org.matrix.android.sdk.internal.worker.SessionWorkerParams
@@ -64,8 +65,8 @@ private data class NewAttachmentAttributes(
 )
 
 /**
- * Possible previous worker: None
- * Possible next worker    : Always [MultipleEventSendingDispatcherWorker]
+ * Possible previous worker: None.
+ * Possible next worker    : Always [MultipleEventSendingDispatcherWorker].
  */
 internal class UploadContentWorker(val context: Context, params: WorkerParameters, sessionManager: SessionManager) :
         SessionSafeCoroutineWorker<UploadContentWorker.Params>(context, params, sessionManager, Params::class.java) {
@@ -91,6 +92,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
     @Inject lateinit var thumbnailExtractor: ThumbnailExtractor
     @Inject lateinit var localEchoRepository: LocalEchoRepository
     @Inject lateinit var temporaryFileCreator: TemporaryFileCreator
+    @Inject lateinit var clock: Clock
 
     override fun injectWith(injector: SessionComponent) {
         injector.inject(this)
@@ -254,7 +256,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                             .also { filesToDelete.add(it) }
 
                     uploadedFileEncryptedFileInfo =
-                            MXEncryptedAttachments.encrypt(fileToUpload.inputStream(), encryptedFile) { read, total ->
+                            MXEncryptedAttachments.encrypt(fileToUpload.inputStream(), encryptedFile, clock) { read, total ->
                                 notifyTracker(params) {
                                     contentUploadStateTracker.setEncrypting(it, read.toLong(), total.toLong())
                                 }
@@ -298,12 +300,14 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
 
                 val uploadThumbnailResult = dealWithThumbnail(params)
 
-                handleSuccess(params,
+                handleSuccess(
+                        params,
                         contentUploadResponse.contentUri,
                         uploadedFileEncryptedFileInfo,
                         uploadThumbnailResult?.uploadedThumbnailUrl,
                         uploadThumbnailResult?.uploadedThumbnailEncryptedFileInfo,
-                        newAttachmentAttributes)
+                        newAttachmentAttributes
+                )
             } catch (t: Throwable) {
                 Timber.e(t, "## ERROR ${t.localizedMessage}")
                 handleFailure(params, t)
@@ -330,7 +334,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
     )
 
     /**
-     * If appropriate, it will create and upload a thumbnail
+     * If appropriate, it will create and upload a thumbnail.
      */
     private suspend fun dealWithThumbnail(params: Params): UploadThumbnailResult? {
         return thumbnailExtractor.extractThumbnail(params.attachment)
@@ -345,7 +349,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         if (params.isEncrypted) {
                             Timber.v("Encrypt thumbnail")
                             notifyTracker(params) { contentUploadStateTracker.setEncryptingThumbnail(it) }
-                            val encryptionResult = MXEncryptedAttachments.encryptAttachment(thumbnailData.bytes.inputStream())
+                            val encryptionResult = MXEncryptedAttachments.encryptAttachment(thumbnailData.bytes.inputStream(), clock)
                             val contentUploadResponse = fileUploader.uploadByteArray(
                                     byteArray = encryptionResult.encryptedByteArray,
                                     filename = null,

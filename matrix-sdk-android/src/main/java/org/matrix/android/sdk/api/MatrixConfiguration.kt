@@ -47,7 +47,7 @@ data class MatrixConfiguration(
          */
         val proxy: Proxy? = null,
         /**
-         * TLS versions and cipher suites limitation for unauthenticated requests
+         * TLS versions and cipher suites limitation for unauthenticated requests.
          */
         val connectionSpec: ConnectionSpec = ConnectionSpec.RESTRICTED_TLS,
         /**
@@ -67,16 +67,7 @@ data class MatrixConfiguration(
          */
         val additionalNetworkInterceptor: Interceptor? = null,
         /**
-         * Thread messages default enable/disabled value
+         * Thread messages default enable/disabled value.
          */
         val threadMessagesEnabledDefault: Boolean = false,
-) {
-
-    /**
-     * Can be implemented by your Application class.
-     */
-    @Deprecated("Use Matrix.createInstance and manage the instance manually instead of Matrix.getInstance")
-    interface Provider {
-        fun providesMatrixConfiguration(): MatrixConfiguration
-    }
-}
+)

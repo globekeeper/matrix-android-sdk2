@@ -24,10 +24,14 @@ import org.matrix.android.sdk.api.session.room.model.ReactionAggregatedSummary
 import org.matrix.android.sdk.api.session.room.model.relation.ReactionContent
 import org.matrix.android.sdk.api.session.room.send.SendState
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
+import org.matrix.android.sdk.internal.util.time.Clock
 import timber.log.Timber
 import java.util.Collections
 
-internal class UIEchoManager(private val listener: Listener) {
+internal class UIEchoManager(
+        private val listener: Listener,
+        private val clock: Clock,
+) {
 
     interface Listener {
         fun rebuildEvent(eventId: String, builder: (TimelineEvent) -> TimelineEvent?): Boolean
@@ -40,7 +44,7 @@ internal class UIEchoManager(private val listener: Listener) {
     }
 
     /**
-     * Due to lag of DB updates, we keep some UI echo of some properties to update timeline faster
+     * Due to lag of DB updates, we keep some UI echo of some properties to update timeline faster.
      */
     private val inMemorySendingStates = Collections.synchronizedMap<String, SendState>(HashMap())
 
@@ -99,9 +103,7 @@ internal class UIEchoManager(private val listener: Listener) {
         val relatedEventID = timelineEvent.eventId
         val contents = inMemoryReactions[relatedEventID] ?: return timelineEvent
 
-        var existingAnnotationSummary = timelineEvent.annotations ?: EventAnnotationsSummary(
-                relatedEventID
-        )
+        var existingAnnotationSummary = timelineEvent.annotations ?: EventAnnotationsSummary()
         val updateReactions = existingAnnotationSummary.reactionsSummary.toMutableList()
 
         contents.forEach { uiEchoReaction ->
@@ -112,7 +114,7 @@ internal class UIEchoManager(private val listener: Listener) {
                         key = uiEchoReaction.reaction,
                         count = 1,
                         addedByMe = true,
-                        firstTimestamp = System.currentTimeMillis(),
+                        firstTimestamp = clock.epochMillis(),
                         sourceEvents = emptyList(),
                         localEchoEvents = listOf(uiEchoReaction.localEchoId)
                 ).let { updateReactions.add(it) }
@@ -146,7 +148,7 @@ internal class UIEchoManager(private val listener: Listener) {
     fun updateSentStateWithUiEcho(timelineEvent: TimelineEvent): TimelineEvent {
         if (timelineEvent.root.sendState.isSent()) return timelineEvent
         val inMemoryState = inMemorySendingStates[timelineEvent.eventId] ?: return timelineEvent
-        // Timber.v("## ${System.currentTimeMillis()} Send event refresh echo with live state $inMemoryState from state ${element.root.sendState}")
+        // Timber.v("## ${clock.epochMillis()} Send event refresh echo with live state $inMemoryState from state ${element.root.sendState}")
         return timelineEvent.copy(
                 root = timelineEvent.root.copyAll()
                         .also { it.sendState = inMemoryState }
