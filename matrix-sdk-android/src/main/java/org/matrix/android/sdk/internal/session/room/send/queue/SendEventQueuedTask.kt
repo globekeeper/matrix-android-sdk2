@@ -24,8 +24,8 @@ import org.matrix.android.sdk.internal.crypto.tasks.SendEventTask
 import org.matrix.android.sdk.internal.session.room.send.CancelSendTracker
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoRepository
 
-internal class SendEventQueuedTask(
-        val event: Event,
+internal open class SendEventQueuedTask(
+        var event: Event,
         val encrypt: Boolean,
         val sendEventTask: SendEventTask,
         val cryptoService: CryptoService,

@@ -44,5 +44,9 @@ data class MessageTextContent(
         @Json(name = "formatted_body") override val formattedBody: String? = null,
 
         @Json(name = "m.relates_to") override val relatesTo: RelationDefaultContent? = null,
-        @Json(name = "m.new_content") override val newContent: Content? = null
+        @Json(name = "m.new_content") override val newContent: Content? = null,
+        /**
+         * Required if the current user's location data should be sent with an event.
+         */
+        @Json(name = "location") val location: Content? = null
 ) : MessageContentWithFormattedBody

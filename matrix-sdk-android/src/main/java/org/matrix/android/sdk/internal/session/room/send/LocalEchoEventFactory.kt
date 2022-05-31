@@ -62,10 +62,12 @@ import org.matrix.android.sdk.api.session.room.model.relation.ReactionContent
 import org.matrix.android.sdk.api.session.room.model.relation.ReactionInfo
 import org.matrix.android.sdk.api.session.room.model.relation.RelationDefaultContent
 import org.matrix.android.sdk.api.session.room.model.relation.ReplyToContent
+import org.matrix.android.sdk.api.session.room.send.SendState
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
 import org.matrix.android.sdk.api.session.room.timeline.getLastMessageContent
 import org.matrix.android.sdk.api.session.room.timeline.isReply
 import org.matrix.android.sdk.api.util.TextContent
+import org.matrix.android.sdk.internal.database.mapper.toEntity
 import org.matrix.android.sdk.internal.di.UserId
 import org.matrix.android.sdk.internal.session.content.ThumbnailExtractor
 import org.matrix.android.sdk.internal.session.permalinks.PermalinkFactory
@@ -736,6 +738,19 @@ internal class LocalEchoEventFactory @Inject constructor(
     fun createLocalEcho(event: Event) {
         checkNotNull(event.roomId) { "Your event should have a roomId" }
         localEchoRepository.createLocalEcho(event)
+    }
+
+    fun updateLocalEcho(event: Event) {
+        val updatedEventEntity = event.toEntity(event.roomId!!, SendState.UNSENT, System.currentTimeMillis())
+        localEchoRepository.updateEchoAsync(event.eventId!!) { _, entity ->
+            //TODO GK check if its all that needed to be updated
+            entity.content = updatedEventEntity.content
+            entity.ageLocalTs = updatedEventEntity.ageLocalTs
+            entity.age = updatedEventEntity.age
+            entity.originServerTs = updatedEventEntity.originServerTs
+            entity.sendState = updatedEventEntity.sendState
+            entity.sendStateDetails = updatedEventEntity.sendStateDetails
+        }
     }
 
     fun createQuotedTextEvent(

@@ -157,6 +157,16 @@ internal class DefaultSendService @AssistedInject constructor(
         return NoOpCancellable
     }
 
+    override fun sendUpdatableTextMessage(text: CharSequence, msgType: String, autoMarkdown: Boolean, updateCallback: suspend (Event) -> Event): Cancelable {
+        return localEchoEventFactory.createTextEvent(roomId, msgType, text, autoMarkdown)
+            .also { createLocalEcho(it) }
+            .let { sendEventWithPrecursor(it) { ev ->
+                val updatedEvent = updateCallback(ev)
+                updateLocalEcho(updatedEvent)
+                updatedEvent
+            } }
+    }
+
     override fun resendMediaMessage(localEcho: TimelineEvent, gkLocation: GKLocation?): Cancelable {
         if (localEcho.root.sendState.hasFailed()) {
             val clearContent = localEcho.root.getClearContent()
@@ -351,8 +361,17 @@ internal class DefaultSendService @AssistedInject constructor(
         return eventSenderProcessor.postEvent(event)
     }
 
+    private fun sendEventWithPrecursor(event: Event, precursor: suspend (Event) -> Event): Cancelable {
+        //TODO GK use static value for timeout
+        return eventSenderProcessor.postEventWithPrecursor(event, null, 10000, precursor)
+    }
+
     private fun createLocalEcho(event: Event) {
         localEchoEventFactory.createLocalEcho(event)
+    }
+
+    private fun updateLocalEcho(event: Event) {
+        localEchoEventFactory.updateLocalEcho(event)
     }
 
     private fun buildWorkName(identifier: String): String {

@@ -133,6 +133,27 @@ interface RelationService {
     ): Cancelable?
 
     /**
+     * Reply to an event in the timeline (must be in same room), with pre-send callback.
+     * Needed to perform long operations in between creation of local echo and sending it to the server.
+     * https://matrix.org/docs/spec/client_server/r0.4.0.html#id350
+     * The replyText can be a Spannable and contains special spans (MatrixItemSpan) that will be translated
+     * by the sdk into pills.
+     * @param eventReplied the event referenced by the reply
+     * @param replyText the reply text
+     * @param autoMarkdown If true, the SDK will generate a formatted HTML message from the body text if markdown syntax is present
+     * @param showInThread If true, relation will be added to the reply in order to be visible from within threads
+     * @param rootThreadEventId If show in thread is true then we need the rootThreadEventId to generate the relation
+     * @param updateCallback update event after creation and before sending
+     */
+    fun replyToMessageUpdatable(eventReplied: TimelineEvent,
+                                replyText: CharSequence,
+                                autoMarkdown: Boolean = false,
+                                showInThread: Boolean = false,
+                                rootThreadEventId: String? = null,
+                                updateCallback: suspend (Event) -> Event
+    ): Cancelable?
+
+    /**
      * Get the current EventAnnotationsSummary.
      * @param eventId the eventId to look for EventAnnotationsSummary
      * @return the EventAnnotationsSummary found

@@ -50,6 +50,18 @@ interface SendService {
     fun sendTextMessage(text: CharSequence, msgType: String = MessageType.MSGTYPE_TEXT, autoMarkdown: Boolean = false): Cancelable
 
     /**
+     * Method to send a text message asynchronously.
+     * The text to send can be a Spannable and contains special spans (MatrixItemSpan) that will be translated
+     * by the sdk into pills.
+     * @param text the text message to send
+     * @param msgType the message type: MessageType.MSGTYPE_TEXT (default) or MessageType.MSGTYPE_EMOTE
+     * @param autoMarkdown If true, the SDK will generate a formatted HTML message from the body text if markdown syntax is present
+     * @param updateCallback update event after creation and before sending
+     * @return a [Cancelable]
+     */
+    fun sendUpdatableTextMessage(text: CharSequence, msgType: String = MessageType.MSGTYPE_TEXT, autoMarkdown: Boolean = false, updateCallback: suspend (Event) -> Event): Cancelable
+
+    /**
      * Method to send a text message with a formatted body.
      * @param text the text message to send
      * @param formattedText The formatted body using MessageType#FORMAT_MATRIX_HTML

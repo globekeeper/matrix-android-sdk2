@@ -139,6 +139,33 @@ internal class DefaultRelationService @AssistedInject constructor(
         return eventSenderProcessor.postEvent(event)
     }
 
+    override fun replyToMessageUpdatable(
+        eventReplied: TimelineEvent,
+        replyText: CharSequence,
+        autoMarkdown: Boolean,
+        showInThread: Boolean,
+        rootThreadEventId: String?,
+        updateCallback: suspend (Event) -> Event
+    ): Cancelable? {
+        val event = eventFactory.createReplyTextEvent(
+            roomId = roomId,
+            eventReplied = eventReplied,
+            replyText = replyText,
+            autoMarkdown = autoMarkdown,
+            rootThreadEventId = rootThreadEventId,
+            showInThread = showInThread
+        )
+            ?.also { saveLocalEcho(it) }
+            ?: return null
+
+        //TODO GK use static value for timeout
+        return eventSenderProcessor.postEventWithPrecursor(event, null, 10000) { ev ->
+            val updatedEvent = updateCallback(ev)
+            eventFactory.updateLocalEcho(updatedEvent)
+            updatedEvent
+        }
+    }
+
     override fun getEventAnnotationsSummary(eventId: String): EventAnnotationsSummary? {
         return monarchy.fetchCopyMap(
                 { EventAnnotationsSummaryEntity.where(it, roomId, eventId).findFirst() },
