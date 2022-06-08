@@ -101,20 +101,6 @@ internal class EventSenderProcessorCoroutine @Inject constructor(
         return postTask(task)
     }
 
-    override fun postEventWithPrecursor(
-        event: Event, encrypt: Boolean?,
-        precursorTimeout: Long,
-        precursor: suspend (Event) -> Event
-    ): Cancelable {
-        val task = queuedTaskFactory.createSendTaskWithPrecursor(
-            event,
-            encrypt ?: event.roomId?.let { cryptoStore.roomWasOnceEncrypted(it) } ?: false,
-            precursorTimeout,
-            precursor
-        )
-        return postTask(task)
-    }
-
     override fun postRedaction(redactionLocalEcho: Event, reason: String?): Cancelable {
         return postRedaction(redactionLocalEcho.eventId!!, redactionLocalEcho.redacts!!, redactionLocalEcho.roomId!!, reason)
     }

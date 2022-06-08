@@ -17,6 +17,7 @@
 package org.matrix.android.sdk.internal.session.room.send
 
 import org.matrix.android.sdk.api.session.events.model.RelationType
+import org.matrix.android.sdk.api.session.events.model.toContent
 import org.matrix.android.sdk.api.session.room.model.message.MessageFormat
 import org.matrix.android.sdk.api.session.room.model.message.MessageTextContent
 import org.matrix.android.sdk.api.session.room.model.message.MessageType
@@ -25,13 +26,15 @@ import org.matrix.android.sdk.api.session.room.model.relation.ReplyToContent
 import org.matrix.android.sdk.api.util.ContentUtils.extractUsefulTextFromHtmlReply
 import org.matrix.android.sdk.api.util.ContentUtils.extractUsefulTextFromReply
 import org.matrix.android.sdk.api.util.TextContent
+import org.matrix.android.sdk.internal.session.media.GKLocation
 
-internal fun TextContent.toMessageTextContent(msgType: String = MessageType.MSGTYPE_TEXT): MessageTextContent {
+internal fun TextContent.toMessageTextContent(msgType: String = MessageType.MSGTYPE_TEXT, location: GKLocation? = null): MessageTextContent {
     return MessageTextContent(
             msgType = msgType,
             format = MessageFormat.FORMAT_MATRIX_HTML.takeIf { formattedText != null },
             body = text,
-            formattedBody = formattedText
+            formattedBody = formattedText,
+            location = location?.toContent()
     )
 }
 

@@ -26,10 +26,6 @@ internal interface EventSenderProcessor : SessionLifecycleObserver {
 
     fun postEvent(event: Event, encrypt: Boolean): Cancelable
 
-    fun postEventWithPrecursor(event: Event, encrypt: Boolean?,
-                               precursorTimeout: Long,
-                               precursor: suspend (Event) -> Event): Cancelable
-
     fun postRedaction(redactionLocalEcho: Event, reason: String?): Cancelable
 
     fun postRedaction(redactionLocalEchoId: String, eventToRedactId: String, roomId: String, reason: String?): Cancelable

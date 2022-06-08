@@ -64,7 +64,7 @@ data class MessageAudioContent(
         @Json(name = "org.matrix.msc3245.voice") val voiceMessageIndicator: JsonDict? = null,
         
         /**
-         * Required if the current user's location data should be sent with an event
+         * Required if the current user's location data should be sent with an event.
          */
         @Json(name = "location") val location: Content? = null
 ) : MessageWithAttachmentContent {

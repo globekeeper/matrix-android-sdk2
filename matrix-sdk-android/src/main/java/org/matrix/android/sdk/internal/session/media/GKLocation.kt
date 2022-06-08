@@ -13,8 +13,8 @@ data class GKLocation(val type: String,
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class Geometry(val type: String, val coordinates: MutableList<String>) : Parcelable
+data class Geometry(val type: String, val coordinates: List<String>) : Parcelable
 
 @Parcelize
 @JsonClass(generateAdapter = true)
-data class Properties(val visible: Boolean, val name: String) : Parcelable
+data class Properties(val visible: Boolean?, val name: String?, val accuracy: String?) : Parcelable

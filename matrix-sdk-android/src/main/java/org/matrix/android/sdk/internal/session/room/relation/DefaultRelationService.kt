@@ -34,6 +34,7 @@ import org.matrix.android.sdk.internal.database.mapper.asDomain
 import org.matrix.android.sdk.internal.database.model.EventAnnotationsSummaryEntity
 import org.matrix.android.sdk.internal.database.query.where
 import org.matrix.android.sdk.internal.di.SessionDatabase
+import org.matrix.android.sdk.internal.session.media.GKLocation
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoEventFactory
 import org.matrix.android.sdk.internal.session.room.send.queue.EventSenderProcessor
 import org.matrix.android.sdk.internal.session.room.timeline.TimelineEventDataSource
@@ -123,7 +124,8 @@ internal class DefaultRelationService @AssistedInject constructor(
             replyText: CharSequence,
             autoMarkdown: Boolean,
             showInThread: Boolean,
-            rootThreadEventId: String?
+            rootThreadEventId: String?,
+            location: GKLocation?
     ): Cancelable? {
         val event = eventFactory.createReplyTextEvent(
                 roomId = roomId,
@@ -131,39 +133,13 @@ internal class DefaultRelationService @AssistedInject constructor(
                 replyText = replyText,
                 autoMarkdown = autoMarkdown,
                 rootThreadEventId = rootThreadEventId,
-                showInThread = showInThread
+                showInThread = showInThread,
+                location = location
         )
                 ?.also { saveLocalEcho(it) }
                 ?: return null
 
         return eventSenderProcessor.postEvent(event)
-    }
-
-    override fun replyToMessageUpdatable(
-        eventReplied: TimelineEvent,
-        replyText: CharSequence,
-        autoMarkdown: Boolean,
-        showInThread: Boolean,
-        rootThreadEventId: String?,
-        updateCallback: suspend (Event) -> Event
-    ): Cancelable? {
-        val event = eventFactory.createReplyTextEvent(
-            roomId = roomId,
-            eventReplied = eventReplied,
-            replyText = replyText,
-            autoMarkdown = autoMarkdown,
-            rootThreadEventId = rootThreadEventId,
-            showInThread = showInThread
-        )
-            ?.also { saveLocalEcho(it) }
-            ?: return null
-
-        //TODO GK use static value for timeout
-        return eventSenderProcessor.postEventWithPrecursor(event, null, 10000) { ev ->
-            val updatedEvent = updateCallback(ev)
-            eventFactory.updateLocalEcho(updatedEvent)
-            updatedEvent
-        }
     }
 
     override fun getEventAnnotationsSummary(eventId: String): EventAnnotationsSummary? {

@@ -60,8 +60,7 @@ private data class NewAttachmentAttributes(
         val newWidth: Int? = null,
         val newHeight: Int? = null,
         val newFileSize: Long,
-        val caption: String? = null,
-        val locationJson: GKLocation? = null
+        val caption: String? = null
 )
 
 /**
@@ -78,7 +77,6 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
             val attachment: ContentAttachmentData,
             val isEncrypted: Boolean,
             val compressBeforeSending: Boolean,
-            val locationJson: GKLocation? = null,
             override val lastFailureMessage: String? = null
     ) : SessionWorkerParams
 
@@ -163,8 +161,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         params.attachment.width?.toInt(),
                         params.attachment.height?.toInt(),
                         params.attachment.size,
-                        params.attachment.caption,
-                        params.attachment.locationJson
+                        params.attachment.caption
                 )
 
                 if (attachment.type == ContentAttachmentData.Type.IMAGE &&
@@ -184,8 +181,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                             newWidth = options.outWidth,
                                             newHeight = options.outHeight,
                                             newFileSize = compressedFile.length(),
-                                            caption = params.attachment.caption,
-                                            locationJson = params.attachment.locationJson
+                                            caption = params.attachment.caption
                                     )
                                 }
                             }
@@ -221,8 +217,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                                                 newFileSize = compressedFile.length(),
                                                 newWidth = compressedWidth ?: newAttachmentAttributes.newWidth,
                                                 newHeight = compressedHeight ?: newAttachmentAttributes.newHeight,
-                                                caption = params.attachment.caption,
-                                                locationJson = params.attachment.locationJson
+                                                caption = params.attachment.caption
                                         )
                                         compressedFile
                                                 .also { filesToDelete.add(it) }
@@ -452,8 +447,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         height = newAttachmentAttributes?.newHeight ?: info.height,
                         size = newAttachmentAttributes?.newFileSize ?: info.size,
                         caption = newAttachmentAttributes?.caption
-                ),
-                location = newAttachmentAttributes?.locationJson?.toContent()
+                )
         )
     }
 
@@ -472,8 +466,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                         height = newAttachmentAttributes?.newHeight ?: videoInfo.height,
                         size = newAttachmentAttributes?.newFileSize ?: videoInfo.size,
                         caption = newAttachmentAttributes?.caption
-                ),
-                location = newAttachmentAttributes?.locationJson?.toContent()
+                )
         )
     }
 
@@ -483,8 +476,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
         return copy(
                 url = if (encryptedFileInfo == null) url else null,
                 encryptedFileInfo = encryptedFileInfo?.copy(url = url),
-                info = info?.copy(size = newAttachmentAttributes?.newFileSize ?: 0),
-                location = newAttachmentAttributes?.locationJson?.toContent()
+                info = info?.copy(size = newAttachmentAttributes?.newFileSize ?: 0)
         )
     }
 
@@ -494,8 +486,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
         return copy(
                 url = if (encryptedFileInfo == null) url else null,
                 encryptedFileInfo = encryptedFileInfo?.copy(url = url),
-                audioInfo = audioInfo?.copy(size = newAttachmentAttributes?.newFileSize ?: 0),
-                location = newAttachmentAttributes?.locationJson?.toContent()
+                audioInfo = audioInfo?.copy(size = newAttachmentAttributes?.newFileSize ?: 0)
         )
     }
 

@@ -18,6 +18,7 @@ package org.matrix.android.sdk.internal.session.room.send
 
 import com.zhuinden.monarchy.Monarchy
 import io.realm.Realm
+import org.matrix.android.sdk.api.session.events.model.Content
 import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.events.model.EventType
 import org.matrix.android.sdk.api.session.events.model.toModel
@@ -27,6 +28,7 @@ import org.matrix.android.sdk.api.session.room.send.SendState
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
 import org.matrix.android.sdk.internal.database.RealmSessionProvider
 import org.matrix.android.sdk.internal.database.asyncTransaction
+import org.matrix.android.sdk.internal.database.mapper.ContentMapper
 import org.matrix.android.sdk.internal.database.mapper.TimelineEventMapper
 import org.matrix.android.sdk.internal.database.mapper.asDomain
 import org.matrix.android.sdk.internal.database.mapper.toEntity
@@ -89,6 +91,14 @@ internal class LocalEchoRepository @Inject constructor(
             roomEntity.sendingTimelineEvents.add(0, timelineEventEntity)
             roomSummaryUpdater.updateSendingInformation(realm, roomId)
         }
+    }
+
+    fun updateContent(event: Event, newContent: Content): Event {
+        val updatedEvent = event.copy(content = newContent)
+        updateEchoAsync(event.eventId!!) { realm, sendingEventEntity ->
+            sendingEventEntity.content = ContentMapper.map(newContent)
+        }
+        return updatedEvent
     }
 
     fun updateSendState(eventId: String, roomId: String?, sendState: SendState, sendStateDetails: String? = null) {

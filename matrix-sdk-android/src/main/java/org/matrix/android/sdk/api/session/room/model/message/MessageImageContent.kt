@@ -54,7 +54,7 @@ data class MessageImageContent(
         @Json(name = "file") override val encryptedFileInfo: EncryptedFileInfo? = null,
 
         /**
-         * Required if the current user's location data should be sent with an event
+         * Required if the current user's location data should be sent with an event.
          */
         @Json(name = "location") val location: Content? = null
 ) : MessageImageInfoContent {

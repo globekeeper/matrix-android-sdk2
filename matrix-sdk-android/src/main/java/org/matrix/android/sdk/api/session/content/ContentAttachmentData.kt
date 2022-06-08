@@ -21,10 +21,8 @@ import android.os.Parcelable
 import androidx.exifinterface.media.ExifInterface
 import com.squareup.moshi.JsonClass
 import kotlinx.parcelize.Parcelize
-import org.json.JSONObject
 import org.matrix.android.sdk.api.util.MimeTypes.normalizeMimeType
 import org.matrix.android.sdk.internal.di.MoshiProvider
-import org.matrix.android.sdk.internal.session.media.GKLocation
 
 @Parcelize
 @JsonClass(generateAdapter = true)
@@ -40,8 +38,7 @@ data class ContentAttachmentData(
         val mimeType: String?,
         val type: Type,
         val waveform: List<Int>? = null,
-        val caption: String? = null,
-        val locationJson: GKLocation? = null
+        val caption: String? = null
 ) : Parcelable {
 
     @JsonClass(generateAdapter = false)

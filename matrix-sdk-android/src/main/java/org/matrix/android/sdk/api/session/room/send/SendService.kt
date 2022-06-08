@@ -47,19 +47,7 @@ interface SendService {
      * @param autoMarkdown If true, the SDK will generate a formatted HTML message from the body text if markdown syntax is present
      * @return a [Cancelable]
      */
-    fun sendTextMessage(text: CharSequence, msgType: String = MessageType.MSGTYPE_TEXT, autoMarkdown: Boolean = false): Cancelable
-
-    /**
-     * Method to send a text message asynchronously.
-     * The text to send can be a Spannable and contains special spans (MatrixItemSpan) that will be translated
-     * by the sdk into pills.
-     * @param text the text message to send
-     * @param msgType the message type: MessageType.MSGTYPE_TEXT (default) or MessageType.MSGTYPE_EMOTE
-     * @param autoMarkdown If true, the SDK will generate a formatted HTML message from the body text if markdown syntax is present
-     * @param updateCallback update event after creation and before sending
-     * @return a [Cancelable]
-     */
-    fun sendUpdatableTextMessage(text: CharSequence, msgType: String = MessageType.MSGTYPE_TEXT, autoMarkdown: Boolean = false, updateCallback: suspend (Event) -> Event): Cancelable
+    fun sendTextMessage(text: CharSequence, msgType: String = MessageType.MSGTYPE_TEXT, autoMarkdown: Boolean = false, location: GKLocation? = null): Cancelable
 
     /**
      * Method to send a text message with a formatted body.
@@ -91,7 +79,8 @@ interface SendService {
     fun sendMedia(attachment: ContentAttachmentData,
                   compressBeforeSending: Boolean,
                   roomIds: Set<String>,
-                  rootThreadEventId: String? = null): Cancelable
+                  rootThreadEventId: String? = null,
+                  location: GKLocation? = null): Cancelable
 
     /**
      * Method to send a list of media asynchronously.
@@ -105,7 +94,8 @@ interface SendService {
     fun sendMedias(attachments: List<ContentAttachmentData>,
                    compressBeforeSending: Boolean,
                    roomIds: Set<String>,
-                   rootThreadEventId: String? = null): Cancelable
+                   rootThreadEventId: String? = null,
+                   location: GKLocation? = null): Cancelable
 
     /**
      * Send a poll to the room.
@@ -142,7 +132,7 @@ interface SendService {
      * Schedule this message to be resent.
      * @param localEcho the unsent local echo
      */
-    fun resendTextMessage(localEcho: TimelineEvent): Cancelable
+    fun resendTextMessage(localEcho: TimelineEvent, location: GKLocation? = null): Cancelable
 
     /**
      * Schedule this message to be resent.
@@ -183,7 +173,7 @@ interface SendService {
     /**
      * Resend all failed messages one by one (and keep order).
      */
-    fun resendAllFailedMessages()
+    fun resendAllFailedMessages(location: GKLocation? = null)
 
     /**
      * Cancel all failed messages.

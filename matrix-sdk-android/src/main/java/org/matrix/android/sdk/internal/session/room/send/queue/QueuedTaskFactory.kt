@@ -43,24 +43,6 @@ internal class QueuedTaskFactory @Inject constructor(
         )
     }
 
-    fun createSendTaskWithPrecursor(
-        event: Event,
-        encrypt: Boolean,
-        precursorTimeout: Long,
-        precursor: suspend (Event) -> Event
-    ): QueuedTask {
-        return SendEventQueuedWithPrecursorTask(
-            event = event,
-            encrypt = encrypt,
-            cryptoService = cryptoService,
-            localEchoRepository = localEchoRepository,
-            sendEventTask = sendEventTask,
-            cancelSendTracker = cancelSendTracker,
-            precursorTimeout = precursorTimeout,
-            precursor = precursor
-        )
-    }
-
     fun createRedactTask(redactionLocalEcho: String, eventId: String, roomId: String, reason: String?): QueuedTask {
         return RedactQueuedTask(
                 redactionLocalEchoId = redactionLocalEcho,

@@ -27,18 +27,8 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 import org.matrix.android.sdk.api.MatrixUrls.isMxcUrl
 import org.matrix.android.sdk.api.session.content.ContentAttachmentData
-import org.matrix.android.sdk.api.session.events.model.Event
-import org.matrix.android.sdk.api.session.events.model.isAttachmentMessage
-import org.matrix.android.sdk.api.session.events.model.isTextMessage
-import org.matrix.android.sdk.api.session.events.model.toModel
-import org.matrix.android.sdk.api.session.room.model.message.MessageAudioContent
-import org.matrix.android.sdk.api.session.room.model.message.MessageContent
-import org.matrix.android.sdk.api.session.room.model.message.MessageFileContent
-import org.matrix.android.sdk.api.session.room.model.message.MessageImageContent
-import org.matrix.android.sdk.api.session.room.model.message.MessageVideoContent
-import org.matrix.android.sdk.api.session.room.model.message.MessageWithAttachmentContent
-import org.matrix.android.sdk.api.session.room.model.message.PollType
-import org.matrix.android.sdk.api.session.room.model.message.getFileUrl
+import org.matrix.android.sdk.api.session.events.model.*
+import org.matrix.android.sdk.api.session.room.model.message.*
 import org.matrix.android.sdk.api.session.room.send.SendService
 import org.matrix.android.sdk.api.session.room.send.SendState
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
@@ -88,8 +78,8 @@ internal class DefaultSendService @AssistedInject constructor(
                 .let { sendEvent(it) }
     }
 
-    override fun sendTextMessage(text: CharSequence, msgType: String, autoMarkdown: Boolean): Cancelable {
-        return localEchoEventFactory.createTextEvent(roomId, msgType, text, autoMarkdown)
+    override fun sendTextMessage(text: CharSequence, msgType: String, autoMarkdown: Boolean, location: GKLocation?): Cancelable {
+        return localEchoEventFactory.createTextEvent(roomId, msgType, text, autoMarkdown, location)
                 .also { createLocalEcho(it) }
                 .let { sendEvent(it) }
     }
@@ -149,22 +139,14 @@ internal class DefaultSendService @AssistedInject constructor(
         return eventSenderProcessor.postRedaction(redactionEcho, reason)
     }
 
-    override fun resendTextMessage(localEcho: TimelineEvent): Cancelable {
+    override fun resendTextMessage(localEcho: TimelineEvent, location: GKLocation?): Cancelable {
         if (localEcho.root.isTextMessage() && localEcho.root.sendState.hasFailed()) {
             localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-            return sendEvent(localEcho.root)
+            val updatedContent = localEcho.root.getClearContent()?.toModel<MessageTextContent>()?.copy(location = location?.toContent())
+            val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
+            return sendEvent(updatedEvent)
         }
         return NoOpCancellable
-    }
-
-    override fun sendUpdatableTextMessage(text: CharSequence, msgType: String, autoMarkdown: Boolean, updateCallback: suspend (Event) -> Event): Cancelable {
-        return localEchoEventFactory.createTextEvent(roomId, msgType, text, autoMarkdown)
-            .also { createLocalEcho(it) }
-            .let { sendEventWithPrecursor(it) { ev ->
-                val updatedEvent = updateCallback(ev)
-                updateLocalEcho(updatedEvent)
-                updatedEvent
-            } }
     }
 
     override fun resendMediaMessage(localEcho: TimelineEvent, gkLocation: GKLocation?): Cancelable {
@@ -190,11 +172,12 @@ internal class DefaultSendService @AssistedInject constructor(
                             height = messageContent.info.height.toLong(),
                             name = messageContent.body,
                             queryUri = Uri.parse(messageContent.url),
-                            type = ContentAttachmentData.Type.IMAGE,
-                            locationJson = gkLocation
+                            type = ContentAttachmentData.Type.IMAGE
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    internalSendMedia(listOf(localEcho.root), attachmentData, true)
+                    val updatedContent = messageContent.copy(location = gkLocation?.toContent())
+                    val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
+                    internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }
                 is MessageVideoContent -> {
                     val attachmentData = ContentAttachmentData(
@@ -205,11 +188,12 @@ internal class DefaultSendService @AssistedInject constructor(
                             duration = messageContent.videoInfo?.duration?.toLong(),
                             name = messageContent.body,
                             queryUri = Uri.parse(messageContent.url),
-                            type = ContentAttachmentData.Type.VIDEO,
-                            locationJson = gkLocation
+                            type = ContentAttachmentData.Type.VIDEO
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    internalSendMedia(listOf(localEcho.root), attachmentData, true)
+                    val updatedContent = messageContent.copy(location = gkLocation?.toContent())
+                    val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
+                    internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }
                 is MessageFileContent  -> {
                     val attachmentData = ContentAttachmentData(
@@ -217,11 +201,12 @@ internal class DefaultSendService @AssistedInject constructor(
                             mimeType = messageContent.mimeType,
                             name = messageContent.getFileName(),
                             queryUri = Uri.parse(messageContent.url),
-                            type = ContentAttachmentData.Type.FILE,
-                            locationJson = gkLocation
+                            type = ContentAttachmentData.Type.FILE
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    internalSendMedia(listOf(localEcho.root), attachmentData, true)
+                    val updatedContent = messageContent.copy(location = gkLocation?.toContent())
+                    val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
+                    internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }
                 is MessageAudioContent -> {
                     val attachmentData = ContentAttachmentData(
@@ -231,11 +216,12 @@ internal class DefaultSendService @AssistedInject constructor(
                             name = messageContent.body,
                             queryUri = Uri.parse(messageContent.url),
                             type = ContentAttachmentData.Type.AUDIO,
-                            waveform = messageContent.audioWaveformInfo?.waveform?.filterNotNull(),
-                            locationJson = gkLocation
+                            waveform = messageContent.audioWaveformInfo?.waveform?.filterNotNull()
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    internalSendMedia(listOf(localEcho.root), attachmentData, true)
+                    val updatedContent = messageContent.copy(location = gkLocation?.toContent())
+                    val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
+                    internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }
                 else                   -> NoOpCancellable
             }
@@ -258,14 +244,14 @@ internal class DefaultSendService @AssistedInject constructor(
         }
     }
 
-    override fun resendAllFailedMessages() {
+    override fun resendAllFailedMessages(location: GKLocation?) {
         taskExecutor.executorScope.launch {
             val eventsToResend = localEchoRepository.getAllFailedEventsToResend(roomId)
             eventsToResend.forEach {
                 if (it.root.isTextMessage()) {
-                    resendTextMessage(it)
+                    resendTextMessage(it, location)
                 } else if (it.root.isAttachmentMessage()) {
-                    resendMediaMessage(it)
+                    resendMediaMessage(it, location)
                 }
             }
             localEchoRepository.updateSendState(roomId, eventsToResend.map { it.eventId }, SendState.UNSENT)
@@ -283,14 +269,16 @@ internal class DefaultSendService @AssistedInject constructor(
     override fun sendMedias(attachments: List<ContentAttachmentData>,
                             compressBeforeSending: Boolean,
                             roomIds: Set<String>,
-                            rootThreadEventId: String?
+                            rootThreadEventId: String?,
+                            location: GKLocation?
     ): Cancelable {
         return attachments.mapTo(CancelableBag()) {
             sendMedia(
                     attachment = it,
                     compressBeforeSending = compressBeforeSending,
                     roomIds = roomIds,
-                    rootThreadEventId = rootThreadEventId
+                    rootThreadEventId = rootThreadEventId,
+                    location = location
             )
         }
     }
@@ -298,7 +286,8 @@ internal class DefaultSendService @AssistedInject constructor(
     override fun sendMedia(attachment: ContentAttachmentData,
                            compressBeforeSending: Boolean,
                            roomIds: Set<String>,
-                           rootThreadEventId: String?
+                           rootThreadEventId: String?,
+                           location: GKLocation?
     ): Cancelable {
         // Ensure that the event will not be send in a thread if we are a different flow.
         // Like sending files to multiple rooms
@@ -313,7 +302,8 @@ internal class DefaultSendService @AssistedInject constructor(
             localEchoEventFactory.createMediaEvent(
                     roomId = it,
                     attachment = attachment,
-                    rootThreadEventId = rootThreadId
+                    rootThreadEventId = rootThreadId,
+                    location = location
             ).also { event ->
                 createLocalEcho(event)
             }
@@ -361,17 +351,8 @@ internal class DefaultSendService @AssistedInject constructor(
         return eventSenderProcessor.postEvent(event)
     }
 
-    private fun sendEventWithPrecursor(event: Event, precursor: suspend (Event) -> Event): Cancelable {
-        //TODO GK use static value for timeout
-        return eventSenderProcessor.postEventWithPrecursor(event, null, 10000, precursor)
-    }
-
     private fun createLocalEcho(event: Event) {
         localEchoEventFactory.createLocalEcho(event)
-    }
-
-    private fun updateLocalEcho(event: Event) {
-        localEchoEventFactory.updateLocalEcho(event)
     }
 
     private fun buildWorkName(identifier: String): String {
@@ -385,7 +366,7 @@ internal class DefaultSendService @AssistedInject constructor(
         val localEchoIds = allLocalEchos.map {
             LocalEchoIdentifiers(it.roomId!!, it.eventId!!)
         }
-        val uploadMediaWorkerParams = UploadContentWorker.Params(sessionId, localEchoIds, attachment, isRoomEncrypted, compressBeforeSending, attachment.locationJson)
+        val uploadMediaWorkerParams = UploadContentWorker.Params(sessionId, localEchoIds, attachment, isRoomEncrypted, compressBeforeSending)
         val uploadWorkData = WorkerParamsFactory.toData(uploadMediaWorkerParams)
 
         return workManagerProvider.matrixOneTimeWorkRequestBuilder<UploadContentWorker>()
