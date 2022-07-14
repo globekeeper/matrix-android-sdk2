@@ -55,9 +55,11 @@ interface RegistrationWizard {
      * @param password the desired password
      * @param initialDeviceDisplayName the device display name
      */
-    suspend fun createAccount(userName: String?,
-                              password: String?,
-                              initialDeviceDisplayName: String?): RegistrationResult
+    suspend fun createAccount(
+            userName: String?,
+            password: String?,
+            initialDeviceDisplayName: String?
+    ): RegistrationResult
 
     suspend fun createGKAccount(clientSecret: String,
                                 sid: String,
@@ -131,14 +133,14 @@ interface RegistrationWizard {
     suspend fun checkIfEmailHasBeenValidated(delayMillis: Long): RegistrationResult
 
     /**
-     * This is the current ThreePid, waiting for validation. The SDK will store it in database, so it can be
+     * Returns the current ThreePid, waiting for validation. The SDK will store it in database, so it can be
      * restored even if the app has been killed during the registration
      */
-    val currentThreePid: String?
+    fun getCurrentThreePid(): String?
 
     /**
-     * True when login and password have been sent with success to the homeserver, i.e. [createAccount] has been
+     * Return true when login and password have been sent with success to the homeserver, i.e. [createAccount] has been
      * called successfully.
      */
-    val isRegistrationStarted: Boolean
+    fun isRegistrationStarted(): Boolean
 }

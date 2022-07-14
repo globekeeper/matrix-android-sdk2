@@ -48,7 +48,7 @@ internal class DefaultSaveFilterTask @Inject constructor(
             FilterService.FilterPreset.GlobeKeeperFilter -> {
                 FilterFactory.createGKFilter()
             }
-            FilterService.FilterPreset.NoFilter      -> {
+            FilterService.FilterPreset.NoFilter -> {
                 FilterFactory.createDefaultFilter()
             }
         }
@@ -59,7 +59,7 @@ internal class DefaultSaveFilterTask @Inject constructor(
             FilterService.FilterPreset.GlobeKeeperFilter -> {
                 FilterFactory.createGKRoomFilter()
             }
-            FilterService.FilterPreset.NoFilter      -> {
+            FilterService.FilterPreset.NoFilter -> {
                 FilterFactory.createDefaultRoomFilter()
             }
         }

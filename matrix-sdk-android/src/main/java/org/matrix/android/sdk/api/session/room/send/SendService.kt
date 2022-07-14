@@ -63,6 +63,7 @@ interface SendService {
      * @param quotedEvent The event to which we will quote it's content.
      * @param text the text message to send
      * @param autoMarkdown If true, the SDK will generate a formatted HTML message from the body text if markdown syntax is present
+     * @param rootThreadEventId when this param is not null, the message will be sent in this specific thread
      * @return a [Cancelable]
      */
     fun sendQuotedTextMessage(quotedEvent: TimelineEvent, text: String, autoMarkdown: Boolean, rootThreadEventId: String? = null): Cancelable
@@ -76,11 +77,13 @@ interface SendService {
      * @param rootThreadEventId when this param is not null, the Media will be sent in this specific thread
      * @return a [Cancelable]
      */
-    fun sendMedia(attachment: ContentAttachmentData,
-                  compressBeforeSending: Boolean,
-                  roomIds: Set<String>,
-                  rootThreadEventId: String? = null,
-                  location: GKLocation? = null): Cancelable
+    fun sendMedia(
+            attachment: ContentAttachmentData,
+            compressBeforeSending: Boolean,
+            roomIds: Set<String>,
+            rootThreadEventId: String? = null,
+            location: GKLocation? = null
+    ): Cancelable
 
     /**
      * Method to send a list of media asynchronously.
@@ -91,11 +94,13 @@ interface SendService {
      * @param rootThreadEventId when this param is not null, all the Media will be sent in this specific thread
      * @return a [Cancelable]
      */
-    fun sendMedias(attachments: List<ContentAttachmentData>,
-                   compressBeforeSending: Boolean,
-                   roomIds: Set<String>,
-                   rootThreadEventId: String? = null,
-                   location: GKLocation? = null): Cancelable
+    fun sendMedias(
+            attachments: List<ContentAttachmentData>,
+            compressBeforeSending: Boolean,
+            roomIds: Set<String>,
+            rootThreadEventId: String? = null,
+            location: GKLocation? = null
+    ): Cancelable
 
     /**
      * Send a poll to the room.

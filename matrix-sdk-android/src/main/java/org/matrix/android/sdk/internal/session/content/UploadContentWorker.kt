@@ -197,7 +197,7 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
                     })
                             .let { videoCompressionResult ->
                                 when (videoCompressionResult) {
-                                    is VideoCompressionResult.Success           -> {
+                                    is VideoCompressionResult.Success -> {
                                         val compressedFile = videoCompressionResult.compressedFile
                                         var compressedWidth: Int? = null
                                         var compressedHeight: Int? = null
@@ -386,12 +386,14 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
         )
     }
 
-    private suspend fun handleSuccess(params: Params,
-                                      attachmentUrl: String,
-                                      encryptedFileInfo: EncryptedFileInfo?,
-                                      thumbnailUrl: String?,
-                                      thumbnailEncryptedFileInfo: EncryptedFileInfo?,
-                                      newAttachmentAttributes: NewAttachmentAttributes): Result {
+    private suspend fun handleSuccess(
+            params: Params,
+            attachmentUrl: String,
+            encryptedFileInfo: EncryptedFileInfo?,
+            thumbnailUrl: String?,
+            thumbnailEncryptedFileInfo: EncryptedFileInfo?,
+            newAttachmentAttributes: NewAttachmentAttributes
+    ): Result {
         notifyTracker(params) { contentUploadStateTracker.setSuccess(it) }
         params.localEchoIds.forEach {
             updateEvent(it.eventId,
@@ -412,12 +414,14 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
         }
     }
 
-    private suspend fun updateEvent(eventId: String,
-                                    url: String,
-                                    encryptedFileInfo: EncryptedFileInfo?,
-                                    thumbnailUrl: String? = null,
-                                    thumbnailEncryptedFileInfo: EncryptedFileInfo?,
-                                    newAttachmentAttributes: NewAttachmentAttributes) {
+    private suspend fun updateEvent(
+            eventId: String,
+            url: String,
+            encryptedFileInfo: EncryptedFileInfo?,
+            thumbnailUrl: String? = null,
+            thumbnailEncryptedFileInfo: EncryptedFileInfo?,
+            newAttachmentAttributes: NewAttachmentAttributes
+    ) {
         localEchoRepository.updateEcho(eventId) { _, event ->
             val messageContent: MessageContent? = event.asDomain().content.toModel()
             val updatedContent = when (messageContent) {
@@ -436,9 +440,11 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
         params.localEchoIds.forEach { function.invoke(it.eventId) }
     }
 
-    private fun MessageImageContent.update(url: String,
-                                           encryptedFileInfo: EncryptedFileInfo?,
-                                           newAttachmentAttributes: NewAttachmentAttributes?): MessageImageContent {
+    private fun MessageImageContent.update(
+            url: String,
+            encryptedFileInfo: EncryptedFileInfo?,
+            newAttachmentAttributes: NewAttachmentAttributes?
+    ): MessageImageContent {
         return copy(
                 url = if (encryptedFileInfo == null) url else null,
                 encryptedFileInfo = encryptedFileInfo?.copy(url = url),
@@ -451,11 +457,13 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
         )
     }
 
-    private fun MessageVideoContent.update(url: String,
-                                           encryptedFileInfo: EncryptedFileInfo?,
-                                           thumbnailUrl: String?,
-                                           thumbnailEncryptedFileInfo: EncryptedFileInfo?,
-                                           newAttachmentAttributes: NewAttachmentAttributes?): MessageVideoContent {
+    private fun MessageVideoContent.update(
+            url: String,
+            encryptedFileInfo: EncryptedFileInfo?,
+            thumbnailUrl: String?,
+            thumbnailEncryptedFileInfo: EncryptedFileInfo?,
+            newAttachmentAttributes: NewAttachmentAttributes?
+    ): MessageVideoContent {
         return copy(
                 url = if (encryptedFileInfo == null) url else null,
                 encryptedFileInfo = encryptedFileInfo?.copy(url = url),
@@ -470,9 +478,11 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
         )
     }
 
-    private fun MessageFileContent.update(url: String,
-                                          encryptedFileInfo: EncryptedFileInfo?,
-                                          newAttachmentAttributes: NewAttachmentAttributes?): MessageFileContent {
+    private fun MessageFileContent.update(
+            url: String,
+            encryptedFileInfo: EncryptedFileInfo?,
+            newAttachmentAttributes: NewAttachmentAttributes?
+    ): MessageFileContent {
         return copy(
                 url = if (encryptedFileInfo == null) url else null,
                 encryptedFileInfo = encryptedFileInfo?.copy(url = url),
@@ -480,9 +490,11 @@ internal class UploadContentWorker(val context: Context, params: WorkerParameter
         )
     }
 
-    private fun MessageAudioContent.update(url: String,
-                                           encryptedFileInfo: EncryptedFileInfo?,
-                                           newAttachmentAttributes: NewAttachmentAttributes?): MessageAudioContent {
+    private fun MessageAudioContent.update(
+            url: String,
+            encryptedFileInfo: EncryptedFileInfo?,
+            newAttachmentAttributes: NewAttachmentAttributes?
+    ): MessageAudioContent {
         return copy(
                 url = if (encryptedFileInfo == null) url else null,
                 encryptedFileInfo = encryptedFileInfo?.copy(url = url),
