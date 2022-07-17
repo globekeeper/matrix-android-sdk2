@@ -41,8 +41,12 @@ internal class DefaultSearchUserTask @Inject constructor(
         val response = executeRequest(globalErrorReceiver) {
             searchUserAPI.searchUsers(SearchUsersParams(params.search, params.limit))
         }
-        return response.users.map {
-            User(it.userId, it.displayName, it.avatarUrl)
-        }
+        return response.users
+            .filterNot {
+                params.excludedUserIds.contains(it.userId)
+            }
+            .map {
+                User(it.userId, it.displayName, it.avatarUrl)
+            }
     }
 }
