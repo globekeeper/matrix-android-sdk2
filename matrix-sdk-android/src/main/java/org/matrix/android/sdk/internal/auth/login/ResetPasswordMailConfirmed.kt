@@ -36,10 +36,11 @@ internal data class ResetPasswordMailConfirmed(
         val logoutDevices: Boolean? = null
 ) {
     companion object {
-        fun create(clientSecret: String, sid: String, newPassword: String): ResetPasswordMailConfirmed {
+        fun create(clientSecret: String, sid: String, newPassword: String, logoutDevices: Boolean?): ResetPasswordMailConfirmed {
             return ResetPasswordMailConfirmed(
                     auth = AuthParams.createForResetPassword(clientSecret, sid),
-                    newPassword = newPassword
+                    newPassword = newPassword,
+                    logoutDevices = logoutDevices
             )
         }
     }
