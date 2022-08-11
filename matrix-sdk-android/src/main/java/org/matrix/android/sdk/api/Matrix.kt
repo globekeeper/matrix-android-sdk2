@@ -71,8 +71,6 @@ class Matrix(context: Context, matrixConfiguration: MatrixConfiguration) {
 
     private val uiHandler = Handler(Looper.getMainLooper())
 
-    private val uiHandler = Handler(Looper.getMainLooper())
-
     init {
         val appContext = context.applicationContext
         Monarchy.init(appContext)
