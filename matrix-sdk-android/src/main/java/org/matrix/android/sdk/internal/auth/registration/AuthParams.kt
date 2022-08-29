@@ -76,13 +76,14 @@ internal data class AuthParams(
             )
         }
 
-        fun createForResetPassword(clientSecret: String, sid: String): AuthParams {
+        fun createForResetPassword(clientSecret: String, sid: String, idServer: String?): AuthParams {
             return AuthParams(
                     type = LoginFlowTypes.EMAIL_IDENTITY,
                     session = null,
                     threePidCredentials = ThreePidCredentials(
                             clientSecret = clientSecret,
-                            sid = sid
+                            sid = sid,
+                            idServer = idServer
                     )
             )
         }

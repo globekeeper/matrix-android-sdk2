@@ -86,7 +86,7 @@ internal class DefaultLoginWizard(
     }
 
     override suspend fun loginMock(credentials: Credentials): Session {
-        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig, LoginType.PASSWORD)
+        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig, LoginType.SSO)
     }
 
     /**
@@ -135,7 +135,8 @@ internal class DefaultLoginWizard(
                 pendingSessionData.clientSecret,
                 resetPasswordData.addThreePidRegistrationResponse.sid,
                 newPassword,
-                logoutAllDevices
+                logoutAllDevices,
+        null
         )
 
         executeRequest(null) {
@@ -152,18 +153,12 @@ internal class DefaultLoginWizard(
         sid: String,
         idServer: String
     ) {
-        val param = ResetPasswordMailConfirmed(
-            logoutDevices = true,
-            auth = AuthParams(
-                type = LoginFlowTypes.EMAIL_IDENTITY,
-                session = null,
-                threePidCredentials = ThreePidCredentials(
-                    clientSecret = clientSecret,
-                    sid = sid,
-                    idServer = idServer
-                )
-            ),
-            newPassword = newPassword
+        val param = ResetPasswordMailConfirmed.create(
+            clientSecret,
+            sid,
+            newPassword,
+            true,
+            idServer
         )
         executeRequest(null) {
             authAPI.resetPasswordMailConfirmed(param)

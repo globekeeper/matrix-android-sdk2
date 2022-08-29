@@ -36,9 +36,10 @@ internal data class ResetPasswordMailConfirmed(
         val logoutDevices: Boolean? = null
 ) {
     companion object {
-        fun create(clientSecret: String, sid: String, newPassword: String, logoutDevices: Boolean?): ResetPasswordMailConfirmed {
+        //TODO GK idServer may be useless, in that case remove it (back to original version without it)
+        fun create(clientSecret: String, sid: String, newPassword: String, logoutDevices: Boolean?, idServer: String?): ResetPasswordMailConfirmed {
             return ResetPasswordMailConfirmed(
-                    auth = AuthParams.createForResetPassword(clientSecret, sid),
+                    auth = AuthParams.createForResetPassword(clientSecret, sid, idServer),
                     newPassword = newPassword,
                     logoutDevices = logoutDevices
             )
