@@ -17,8 +17,8 @@
 package org.matrix.android.sdk.internal.auth.login
 
 import android.util.Patterns
-import org.matrix.android.sdk.api.auth.data.LoginFlowTypes
 import org.matrix.android.sdk.api.auth.data.Credentials
+import org.matrix.android.sdk.api.auth.LoginType
 import org.matrix.android.sdk.api.auth.login.LoginProfileInfo
 import org.matrix.android.sdk.api.auth.login.LoginWizard
 import org.matrix.android.sdk.api.auth.registration.RegisterThreePid
@@ -82,11 +82,11 @@ internal class DefaultLoginWizard(
             authAPI.login(loginParams)
         }
 
-        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig)
+        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig, LoginType.PASSWORD)
     }
 
     override suspend fun loginMock(credentials: Credentials): Session {
-        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig)
+        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig, LoginType.PASSWORD)
     }
 
     /**
@@ -100,7 +100,7 @@ internal class DefaultLoginWizard(
             authAPI.login(loginParams)
         }
 
-        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig)
+        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig, LoginType.SSO)
     }
 
     override suspend fun loginCustom(data: JsonDict): Session {
@@ -108,7 +108,7 @@ internal class DefaultLoginWizard(
             authAPI.login(data)
         }
 
-        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig)
+        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig, LoginType.CUSTOM)
     }
 
     override suspend fun resetPassword(email: String) {
