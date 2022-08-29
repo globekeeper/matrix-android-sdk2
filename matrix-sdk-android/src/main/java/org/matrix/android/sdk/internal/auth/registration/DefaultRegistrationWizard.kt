@@ -101,7 +101,7 @@ internal class DefaultRegistrationWizard(
             auth = AuthParams(type = EMAIL_IDENTITY,
             threePidCredentials = threePidCredentials,
             session = safeSession))
-        return performRegistrationRequest(params)
+        return performRegistrationRequest(params, LoginType.PASSWORD)
             .also {
                 pendingSessionData = pendingSessionData.copy(isRegistrationStarted = true)
                     .also { pendingSessionStore.savePendingSessionData(it) }
@@ -234,7 +234,7 @@ internal class DefaultRegistrationWizard(
                 auth = AuthParams(type = type, session = safeSession)
         )
 
-        return performRegistrationRequest(params)
+        return performRegistrationRequest(params, LoginType.PASSWORD)
     }
 
     override suspend fun registrationCustom(

@@ -29,6 +29,7 @@ import org.matrix.android.sdk.internal.network.httpclient.addSocketFactory
 import org.matrix.android.sdk.internal.network.ssl.UnrecognizedCertificateException
 import org.matrix.android.sdk.internal.task.Task
 import okhttp3.OkHttpClient
+import org.matrix.android.sdk.api.auth.LoginType
 import org.matrix.android.sdk.api.auth.data.LoginFlowTypes
 import org.matrix.android.sdk.internal.auth.data.TokenLoginParams
 import javax.inject.Inject
@@ -71,7 +72,7 @@ internal class DefaultDirectTokenLoginTask @Inject constructor(
             }
         }
 
-        return sessionCreator.createSession(credentials, params.homeServerConnectionConfig)
+        return sessionCreator.createSession(credentials, params.homeServerConnectionConfig, LoginType.DIRECT)
     }
 
     private fun buildClient(homeServerConnectionConfig: HomeServerConnectionConfig): OkHttpClient {
