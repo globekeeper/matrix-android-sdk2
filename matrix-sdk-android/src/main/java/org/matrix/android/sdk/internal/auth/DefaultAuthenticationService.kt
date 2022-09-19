@@ -440,7 +440,7 @@ internal class DefaultAuthenticationService @Inject constructor(
         return retrofit.create(AuthAPI::class.java)
     }
 
-    private fun buildClient(homeServerConnectionConfig: HomeServerConnectionConfig): OkHttpClient {
+    override fun buildClient(homeServerConnectionConfig: HomeServerConnectionConfig): OkHttpClient {
         return okHttpClient.get()
                 .newBuilder()
                 .addSocketFactory(homeServerConnectionConfig)

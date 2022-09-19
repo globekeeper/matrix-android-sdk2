@@ -303,6 +303,11 @@ interface Session {
     fun getOkHttpClient(): OkHttpClient
 
     /**
+     * Will return fully authenticated OkHttpClient with certificates, proxy and access-token.
+     */
+    fun getAuthenticatedOkHttpClient(): OkHttpClient
+
+    /**
      * A global session listener to get notified for some events.
      */
     interface Listener : StatisticsListener, SessionLifecycleObserver {

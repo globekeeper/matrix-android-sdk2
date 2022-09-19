@@ -16,6 +16,7 @@
 
 package org.matrix.android.sdk.api.auth
 
+import okhttp3.OkHttpClient
 import org.matrix.android.sdk.api.auth.data.Credentials
 import org.matrix.android.sdk.api.auth.data.HomeServerConnectionConfig
 import org.matrix.android.sdk.api.auth.data.LoginFlowResult
@@ -138,4 +139,9 @@ interface AuthenticationService {
     suspend fun directTokenAuthentication(homeServerConnectionConfig: HomeServerConnectionConfig,
                                      token: String,
                                      deviceId: String): Session
+
+    /**
+     * Builds OkHttpClient with certificates and proxy in mind
+     */
+    fun buildClient(homeServerConnectionConfig: HomeServerConnectionConfig): OkHttpClient
 }
