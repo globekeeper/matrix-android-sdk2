@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Matrix.org Foundation C.I.C.
+ * Copyright (c) 2022 The Matrix.org Foundation C.I.C.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,15 @@
  * limitations under the License.
  */
 
-package org.matrix.android.sdk.internal.network.interceptors
+package org.matrix.android.sdk.internal.database
 
-import androidx.annotation.NonNull
-import okhttp3.logging.HttpLoggingInterceptor
+import io.realm.DefaultCompactOnLaunchCallback
 
-/**
- * No op logger
- */
-internal class FormattedJsonHttpLogger : HttpLoggingInterceptor.Logger {
-
-    @Synchronized
-    override fun log(@NonNull message: String) {
-    }
+class RealmCompactOnLaunch : DefaultCompactOnLaunchCallback() {
+    /**
+     * Forces all RealmCompactOnLaunch instances to be equal.
+     * Avoids Realm throwing when multiple instances of this class are used.
+     */
+    override fun equals(other: Any?) = other is RealmCompactOnLaunch
+    override fun hashCode() = 0x1000
 }
