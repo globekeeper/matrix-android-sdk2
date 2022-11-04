@@ -29,6 +29,7 @@ import org.matrix.android.sdk.api.MatrixUrls.isMxcUrl
 import org.matrix.android.sdk.api.session.content.ContentAttachmentData
 import org.matrix.android.sdk.api.session.events.model.*
 import org.matrix.android.sdk.api.session.room.model.message.*
+import org.matrix.android.sdk.api.session.room.model.relation.RelationDefaultContent
 import org.matrix.android.sdk.api.session.room.send.SendService
 import org.matrix.android.sdk.api.session.room.send.SendState
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
@@ -78,51 +79,60 @@ internal class DefaultSendService @AssistedInject constructor(
                 .let { sendEvent(it) }
     }
 
-    override fun sendTextMessage(text: CharSequence, msgType: String, autoMarkdown: Boolean, location: GKLocation?): Cancelable {
-        return localEchoEventFactory.createTextEvent(roomId, msgType, text, autoMarkdown, location)
+    override fun sendTextMessage(text: CharSequence, msgType: String, autoMarkdown: Boolean, additionalContent: Content?, location: GKLocation?): Cancelable {
+        return localEchoEventFactory.createTextEvent(roomId, msgType, text, autoMarkdown, additionalContent, location)
                 .also { createLocalEcho(it) }
                 .let { sendEvent(it) }
     }
 
-    override fun sendFormattedTextMessage(text: String, formattedText: String, msgType: String): Cancelable {
-        return localEchoEventFactory.createFormattedTextEvent(roomId, TextContent(text, formattedText), msgType)
+    override fun sendFormattedTextMessage(text: String, formattedText: String, msgType: String, additionalContent: Content?): Cancelable {
+        return localEchoEventFactory.createFormattedTextEvent(roomId, TextContent(text, formattedText), msgType, additionalContent)
                 .also { createLocalEcho(it) }
                 .let { sendEvent(it) }
     }
 
-    override fun sendQuotedTextMessage(quotedEvent: TimelineEvent, text: String, autoMarkdown: Boolean, rootThreadEventId: String?): Cancelable {
+    override fun sendQuotedTextMessage(
+            quotedEvent: TimelineEvent,
+            text: String,
+            formattedText: String?,
+            autoMarkdown: Boolean,
+            rootThreadEventId: String?,
+            additionalContent: Content?,
+    ): Cancelable {
         return localEchoEventFactory.createQuotedTextEvent(
                 roomId = roomId,
                 quotedEvent = quotedEvent,
                 text = text,
+                formattedText = formattedText,
                 autoMarkdown = autoMarkdown,
-                rootThreadEventId = rootThreadEventId
+                rootThreadEventId = rootThreadEventId,
+                additionalContent = additionalContent,
         )
                 .also { createLocalEcho(it) }
                 .let { sendEvent(it) }
     }
 
-    override fun sendPoll(pollType: PollType, question: String, options: List<String>): Cancelable {
-        return localEchoEventFactory.createPollEvent(roomId, pollType, question, options)
+    override fun sendPoll(pollType: PollType, question: String, options: List<String>, additionalContent: Content?): Cancelable {
+        return localEchoEventFactory.createPollEvent(roomId, pollType, question, options, additionalContent)
                 .also { createLocalEcho(it) }
                 .let { sendEvent(it) }
     }
 
-    override fun voteToPoll(pollEventId: String, answerId: String): Cancelable {
-        return localEchoEventFactory.createPollReplyEvent(roomId, pollEventId, answerId)
+    override fun voteToPoll(pollEventId: String, answerId: String, additionalContent: Content?): Cancelable {
+        return localEchoEventFactory.createPollReplyEvent(roomId, pollEventId, answerId, additionalContent)
                 .also { createLocalEcho(it) }
                 .let { sendEvent(it) }
     }
 
-    override fun endPoll(pollEventId: String): Cancelable {
-        return localEchoEventFactory.createEndPollEvent(roomId, pollEventId)
+    override fun endPoll(pollEventId: String, additionalContent: Content?): Cancelable {
+        return localEchoEventFactory.createEndPollEvent(roomId, pollEventId, additionalContent)
                 .also { createLocalEcho(it) }
                 .let { sendEvent(it) }
     }
 
-    override fun redactEvent(event: Event, reason: String?): Cancelable {
+    override fun redactEvent(event: Event, reason: String?, additionalContent: Content?): Cancelable {
         // TODO manage media/attachements?
-        val redactionEcho = localEchoEventFactory.createRedactEvent(roomId, event.eventId!!, reason)
+        val redactionEcho = localEchoEventFactory.createRedactEvent(roomId, event.eventId!!, reason, additionalContent)
                 .also { createLocalEcho(it) }
         return eventSenderProcessor.postRedaction(redactionEcho, reason)
     }
@@ -259,6 +269,7 @@ internal class DefaultSendService @AssistedInject constructor(
             compressBeforeSending: Boolean,
             roomIds: Set<String>,
             rootThreadEventId: String?,
+            additionalContent: Content?,
             location: GKLocation?
     ): Cancelable {
         return attachments.mapTo(CancelableBag()) {
@@ -277,6 +288,8 @@ internal class DefaultSendService @AssistedInject constructor(
             compressBeforeSending: Boolean,
             roomIds: Set<String>,
             rootThreadEventId: String?,
+            relatesTo: RelationDefaultContent?,
+            additionalContent: Content?,
             location: GKLocation?
     ): Cancelable {
         // Ensure that the event will not be send in a thread if we are a different flow.
@@ -293,6 +306,8 @@ internal class DefaultSendService @AssistedInject constructor(
                     roomId = it,
                     attachment = attachment,
                     rootThreadEventId = rootThreadId,
+                    relatesTo,
+                    additionalContent,
                     location = location
             ).also { event ->
                 createLocalEcho(event)

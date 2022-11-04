@@ -21,6 +21,7 @@ import org.matrix.android.sdk.api.session.events.model.Content
 import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.room.model.message.MessageType
 import org.matrix.android.sdk.api.session.room.model.message.PollType
+import org.matrix.android.sdk.api.session.room.model.relation.RelationDefaultContent
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
 import org.matrix.android.sdk.api.util.Cancelable
 import org.matrix.android.sdk.internal.session.media.GKLocation
@@ -45,28 +46,50 @@ interface SendService {
      * @param text the text message to send
      * @param msgType the message type: MessageType.MSGTYPE_TEXT (default) or MessageType.MSGTYPE_EMOTE
      * @param autoMarkdown If true, the SDK will generate a formatted HTML message from the body text if markdown syntax is present
+     * @param additionalContent additional content to put in the event content
      * @return a [Cancelable]
      */
-    fun sendTextMessage(text: CharSequence, msgType: String = MessageType.MSGTYPE_TEXT, autoMarkdown: Boolean = false, location: GKLocation? = null): Cancelable
+    fun sendTextMessage(
+            text: CharSequence,
+            msgType: String = MessageType.MSGTYPE_TEXT,
+            autoMarkdown: Boolean = false,
+            additionalContent: Content? = null,
+            location: GKLocation? = null
+    ): Cancelable
 
     /**
      * Method to send a text message with a formatted body.
      * @param text the text message to send
      * @param formattedText The formatted body using MessageType#FORMAT_MATRIX_HTML
      * @param msgType the message type: MessageType.MSGTYPE_TEXT (default) or MessageType.MSGTYPE_EMOTE
+     * @param additionalContent additional content to put in the event content
      * @return a [Cancelable]
      */
-    fun sendFormattedTextMessage(text: String, formattedText: String, msgType: String = MessageType.MSGTYPE_TEXT): Cancelable
+    fun sendFormattedTextMessage(
+            text: String,
+            formattedText: String,
+            msgType: String = MessageType.MSGTYPE_TEXT,
+            additionalContent: Content? = null,
+    ): Cancelable
 
     /**
      * Method to quote an events content.
      * @param quotedEvent The event to which we will quote it's content.
-     * @param text the text message to send
+     * @param text the plain text message to send
+     * @param formattedText the formatted text message to send
      * @param autoMarkdown If true, the SDK will generate a formatted HTML message from the body text if markdown syntax is present
      * @param rootThreadEventId when this param is not null, the message will be sent in this specific thread
+     * @param additionalContent additional content to put in the event content
      * @return a [Cancelable]
      */
-    fun sendQuotedTextMessage(quotedEvent: TimelineEvent, text: String, autoMarkdown: Boolean, rootThreadEventId: String? = null): Cancelable
+    fun sendQuotedTextMessage(
+            quotedEvent: TimelineEvent,
+            text: String,
+            formattedText: String? = null,
+            autoMarkdown: Boolean,
+            rootThreadEventId: String? = null,
+            additionalContent: Content? = null,
+    ): Cancelable
 
     /**
      * Method to send a media asynchronously.
@@ -75,6 +98,8 @@ interface SendService {
      * @param roomIds set of roomIds to where the media will be sent. The current roomId will be add to this set if not present.
      *                It can be useful to send media to multiple room. It's safe to include the current roomId in this set
      * @param rootThreadEventId when this param is not null, the Media will be sent in this specific thread
+     * @param relatesTo add a relation content to the media event
+     * @param additionalContent additional content to put in the event content
      * @return a [Cancelable]
      */
     fun sendMedia(
@@ -82,6 +107,8 @@ interface SendService {
             compressBeforeSending: Boolean,
             roomIds: Set<String>,
             rootThreadEventId: String? = null,
+            relatesTo: RelationDefaultContent? = null,
+            additionalContent: Content? = null,
             location: GKLocation? = null
     ): Cancelable
 
@@ -92,6 +119,7 @@ interface SendService {
      * @param roomIds set of roomIds to where the media will be sent. The current roomId will be add to this set if not present.
      *                It can be useful to send media to multiple room. It's safe to include the current roomId in this set
      * @param rootThreadEventId when this param is not null, all the Media will be sent in this specific thread
+     * @param additionalContent additional content to put in the event content
      * @return a [Cancelable]
      */
     fun sendMedias(
@@ -99,6 +127,7 @@ interface SendService {
             compressBeforeSending: Boolean,
             roomIds: Set<String>,
             rootThreadEventId: String? = null,
+            additionalContent: Content? = null,
             location: GKLocation? = null
     ): Cancelable
 
@@ -107,31 +136,35 @@ interface SendService {
      * @param pollType indicates open or closed polls
      * @param question the question
      * @param options list of options
+     * @param additionalContent additional content to put in the event content
      * @return a [Cancelable]
      */
-    fun sendPoll(pollType: PollType, question: String, options: List<String>): Cancelable
+    fun sendPoll(pollType: PollType, question: String, options: List<String>, additionalContent: Content? = null): Cancelable
 
     /**
      * Method to send a poll response.
      * @param pollEventId the poll currently replied to
      * @param answerId The id of the answer
+     * @param additionalContent additional content to put in the event content
      * @return a [Cancelable]
      */
-    fun voteToPoll(pollEventId: String, answerId: String): Cancelable
+    fun voteToPoll(pollEventId: String, answerId: String, additionalContent: Content? = null): Cancelable
 
     /**
      * End a poll in the room.
      * @param pollEventId event id of the poll
+     * @param additionalContent additional content to put in the event content
      * @return a [Cancelable]
      */
-    fun endPoll(pollEventId: String): Cancelable
+    fun endPoll(pollEventId: String, additionalContent: Content? = null): Cancelable
 
     /**
      * Redact (delete) the given event.
      * @param event The event to redact
      * @param reason Optional reason string
+     * @param additionalContent additional content to put in the event content
      */
-    fun redactEvent(event: Event, reason: String?): Cancelable
+    fun redactEvent(event: Event, reason: String?, additionalContent: Content? = null): Cancelable
 
     /**
      * Schedule this message to be resent.
