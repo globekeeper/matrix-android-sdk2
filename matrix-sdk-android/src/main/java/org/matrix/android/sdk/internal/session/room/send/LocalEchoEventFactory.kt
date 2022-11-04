@@ -499,7 +499,7 @@ internal class LocalEchoEventFactory @Inject constructor(
             isVoiceMessage: Boolean,
             rootThreadEventId: String?,
             relatesTo: RelationDefaultContent?,
-            additionalContent: Content?
+            additionalContent: Content?,
             location: GKLocation?
     ): Event {
         val content = MessageAudioContent(
