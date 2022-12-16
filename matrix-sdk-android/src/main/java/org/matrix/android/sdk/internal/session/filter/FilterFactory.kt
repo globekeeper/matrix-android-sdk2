@@ -28,7 +28,7 @@ internal object FilterFactory {
                 limit = numberOfEvents,
 //                senders = listOf(userId),
 //                relationSenders = userId?.let { listOf(it) },
-                relationTypes = listOf(RelationType.THREAD)
+                relationTypes = listOf(RelationType.THREAD),
         )
     }
 
@@ -37,7 +37,7 @@ internal object FilterFactory {
                 limit = numberOfEvents,
                 containsUrl = true,
                 types = listOf(EventType.MESSAGE),
-                lazyLoadMembers = true
+                lazyLoadMembers = true,
         )
     }
 
@@ -45,44 +45,25 @@ internal object FilterFactory {
         return FilterUtil.enableLazyLoading(Filter(), true)
     }
 
-    fun createElementFilter(): Filter {
-        return Filter(
-                room = RoomFilter(
-                        timeline = createElementTimelineFilter(),
-                        state = createElementStateFilter()
-                )
-        )
-    }
-
     fun createGKFilter(): Filter { //TODO GK filter
         return Filter(
-                room = RoomFilter(
-                        timeline = createElementTimelineFilter(),
-                        state = createElementStateFilter()
-                )
+            room = RoomFilter(
+                timeline = createElementTimelineFilter(),
+                state = createElementStateFilter()
+            )
         )
     }
 
     fun createDefaultRoomFilter(): RoomEventFilter {
-        return RoomEventFilter(
-                lazyLoadMembers = true
-        )
-    }
-
-    fun createElementRoomFilter(): RoomEventFilter {
-        return RoomEventFilter(
-                lazyLoadMembers = true
-                // TODO Enable this for optimization
-                // types = (listOfSupportedEventTypes + listOfSupportedStateEventTypes).toMutableList()
-        )
+        return RoomEventFilter(lazyLoadMembers = true)
     }
 
     fun createGKRoomFilter(): RoomEventFilter {
         return RoomEventFilter(
-                lazyLoadMembers = true,
-                notTypes = listOf("com.globekeeper.connect.location")
-                // TODO Enable this for optimization
-                // types = (listOfSupportedEventTypes + listOfSupportedStateEventTypes).toMutableList()
+            lazyLoadMembers = true,
+            notTypes = listOf("com.globekeeper.connect.location")
+            // TODO Enable this for optimization
+            // types = (listOfSupportedEventTypes + listOfSupportedStateEventTypes).toMutableList()
         )
     }
 
@@ -95,19 +76,7 @@ internal object FilterFactory {
 
     private fun createElementStateFilter(): RoomEventFilter {
         return RoomEventFilter(
-                lazyLoadMembers = true
+            lazyLoadMembers = true
         )
     }
-
-    // Get only managed types by Element
-    private val listOfSupportedEventTypes = listOf(
-            // TODO Complete the list
-            EventType.MESSAGE
-    )
-
-    // Get only managed types by Element
-    private val listOfSupportedStateEventTypes = listOf(
-            // TODO Complete the list
-            EventType.STATE_ROOM_MEMBER
-    )
 }
