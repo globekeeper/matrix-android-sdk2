@@ -45,38 +45,38 @@ internal object FilterFactory {
         return FilterUtil.enableLazyLoading(Filter(), true)
     }
 
-    fun createGKFilter(): Filter { //TODO GK filter
-        return Filter(
-            room = RoomFilter(
-                timeline = createElementTimelineFilter(),
-                state = createElementStateFilter()
-            )
-        )
-    }
+//    fun createGKFilter(): Filter { //TODO GK filter
+//        return Filter(
+//            room = RoomFilter(
+//                timeline = createElementTimelineFilter(),
+//                state = createElementStateFilter()
+//            )
+//        )
+//    }
 
     fun createDefaultRoomFilter(): RoomEventFilter {
         return RoomEventFilter(lazyLoadMembers = true)
     }
 
-    fun createGKRoomFilter(): RoomEventFilter {
-        return RoomEventFilter(
-            lazyLoadMembers = true,
-            notTypes = listOf("com.globekeeper.connect.location")
-            // TODO Enable this for optimization
-            // types = (listOfSupportedEventTypes + listOfSupportedStateEventTypes).toMutableList()
-        )
-    }
-
-    private fun createElementTimelineFilter(): RoomEventFilter? {
-        return null // RoomEventFilter().apply {
-        // TODO Enable this for optimization
-        // types = listOfSupportedEventTypes.toMutableList()
-        // }
-    }
-
-    private fun createElementStateFilter(): RoomEventFilter {
-        return RoomEventFilter(
-            lazyLoadMembers = true
-        )
-    }
+//    fun createGKRoomFilter(): RoomEventFilter {
+//        return RoomEventFilter(
+//            lazyLoadMembers = true,
+//            notTypes = listOf("com.globekeeper.connect.location")
+//            // TODO Enable this for optimization
+//            // types = (listOfSupportedEventTypes + listOfSupportedStateEventTypes).toMutableList()
+//        )
+//    }
+//
+//    private fun createElementTimelineFilter(): RoomEventFilter? {
+//        return null // RoomEventFilter().apply {
+//        // TODO Enable this for optimization
+//        // types = listOfSupportedEventTypes.toMutableList()
+//        // }
+//    }
+//
+//    private fun createElementStateFilter(): RoomEventFilter {
+//        return RoomEventFilter(
+//            lazyLoadMembers = true
+//        )
+//    }
 }
