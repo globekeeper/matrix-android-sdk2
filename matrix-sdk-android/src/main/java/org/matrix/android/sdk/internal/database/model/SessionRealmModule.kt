@@ -71,7 +71,6 @@ import org.matrix.android.sdk.internal.database.model.threads.ThreadSummaryEntit
             SpaceParentSummaryEntity::class,
             UserPresenceEntity::class,
             ThreadSummaryEntity::class,
-            SyncFilterParamsEntity::class,
         ]
 )
 internal class SessionRealmModule

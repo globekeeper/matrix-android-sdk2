@@ -50,7 +50,7 @@ import org.matrix.android.sdk.api.session.room.send.SendState
 import org.matrix.android.sdk.api.session.room.timeline.Timeline
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
 import org.matrix.android.sdk.api.session.room.timeline.TimelineSettings
-import org.matrix.android.sdk.api.session.sync.filter.SyncFilterBuilder
+import org.matrix.android.sdk.internal.session.sync.filter.SyncFilterBuilder
 import timber.log.Timber
 import java.util.UUID
 import java.util.concurrent.CountDownLatch
