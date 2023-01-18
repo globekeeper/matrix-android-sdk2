@@ -18,8 +18,8 @@ package org.matrix.android.sdk.internal.session.filter
 
 import org.matrix.android.sdk.api.MatrixConfiguration
 import org.matrix.android.sdk.api.session.homeserver.HomeServerCapabilities
-import org.matrix.android.sdk.internal.session.sync.filter.SyncFilterBuilder
 import org.matrix.android.sdk.internal.session.homeserver.HomeServerCapabilitiesDataSource
+import org.matrix.android.sdk.internal.sync.filter.SyncFilterBuilder
 import org.matrix.android.sdk.internal.task.Task
 import javax.inject.Inject
 

@@ -27,8 +27,4 @@ internal class FakeFilterRepository : FilterRepository by mockk() {
         coEvery { getStoredSyncFilterId() } returns filterId
         coEvery { getStoredSyncFilterBody() } returns filterBody
     }
-
-    fun givenFilterParamsAreStored(syncFilterParams: SyncFilterParams?) {
-        coEvery { getStoredFilterParams() } returns syncFilterParams
-    }
 }
