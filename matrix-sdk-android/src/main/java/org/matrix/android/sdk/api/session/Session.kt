@@ -56,6 +56,7 @@ import org.matrix.android.sdk.api.session.thirdparty.ThirdPartyService
 import org.matrix.android.sdk.api.session.typing.TypingUsersTracker
 import org.matrix.android.sdk.api.session.user.UserService
 import org.matrix.android.sdk.api.session.widgets.WidgetService
+import org.matrix.android.sdk.internal.session.multiroomlocation.MultiRoomService
 
 /**
  * This interface defines interactions with a session.
@@ -330,4 +331,9 @@ interface Session {
      * Debug API, return the list of all RealmConfiguration used by this session.
      */
     fun getRealmConfigurations(): List<RealmConfiguration>
+
+    /**
+     * Returns the MultiRoomService associated with the session.
+     */
+    fun multiRoomLocationsService(): MultiRoomService
 }

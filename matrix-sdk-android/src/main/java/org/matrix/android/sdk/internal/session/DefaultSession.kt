@@ -77,6 +77,7 @@ import org.matrix.android.sdk.internal.di.SessionId
 import org.matrix.android.sdk.internal.di.UnauthenticatedWithCertificate
 import org.matrix.android.sdk.internal.di.WorkManagerProvider
 import org.matrix.android.sdk.internal.network.GlobalErrorHandler
+import org.matrix.android.sdk.internal.session.multiroomlocation.MultiRoomService
 import org.matrix.android.sdk.internal.util.createUIHandler
 import javax.inject.Inject
 
@@ -136,6 +137,7 @@ internal class DefaultSession @Inject constructor(
         @Authenticated
         private val authenticatedOkHttpClient: Lazy<OkHttpClient>,
         private val sessionState: SessionState,
+        private val multiRoomService: Lazy<MultiRoomService>,
 ) : Session,
         GlobalErrorHandler.Listener {
 
@@ -282,4 +284,6 @@ internal class DefaultSession @Inject constructor(
                 realmConfigurationContentScanner,
         )
     }
+
+    override fun multiRoomLocationsService(): MultiRoomService = multiRoomService.get()
 }

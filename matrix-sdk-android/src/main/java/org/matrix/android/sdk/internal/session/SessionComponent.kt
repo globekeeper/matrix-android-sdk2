@@ -39,6 +39,7 @@ import org.matrix.android.sdk.internal.session.homeserver.HomeServerCapabilities
 import org.matrix.android.sdk.internal.session.identity.IdentityModule
 import org.matrix.android.sdk.internal.session.integrationmanager.IntegrationManagerModule
 import org.matrix.android.sdk.internal.session.media.MediaModule
+import org.matrix.android.sdk.internal.session.multiroomlocation.MultiRoomModule
 import org.matrix.android.sdk.internal.session.openid.OpenIdModule
 import org.matrix.android.sdk.internal.session.presence.di.PresenceModule
 import org.matrix.android.sdk.internal.session.profile.ProfileModule
@@ -98,6 +99,7 @@ import org.matrix.android.sdk.internal.util.system.SystemModule
             PresenceModule::class,
             RequestModule::class,
             SecureStorageModule::class,
+            MultiRoomModule::class,
         ]
 )
 @SessionScope
