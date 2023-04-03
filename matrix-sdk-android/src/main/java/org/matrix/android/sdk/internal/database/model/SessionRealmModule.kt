@@ -18,6 +18,7 @@ package org.matrix.android.sdk.internal.database.model
 
 import io.realm.annotations.RealmModule
 import org.matrix.android.sdk.internal.database.model.livelocation.LiveLocationShareAggregatedSummaryEntity
+import org.matrix.android.sdk.internal.database.model.location.UserLocationEntity
 import org.matrix.android.sdk.internal.database.model.presence.UserPresenceEntity
 import org.matrix.android.sdk.internal.database.model.threads.ThreadListPageEntity
 import org.matrix.android.sdk.internal.database.model.threads.ThreadSummaryEntity
@@ -71,6 +72,7 @@ import org.matrix.android.sdk.internal.database.model.threads.ThreadSummaryEntit
             SpaceChildSummaryEntity::class,
             SpaceParentSummaryEntity::class,
             UserPresenceEntity::class,
+            UserLocationEntity::class,
             ThreadSummaryEntity::class,
             ThreadListPageEntity::class,
             PollHistoryStatusEntity::class,
