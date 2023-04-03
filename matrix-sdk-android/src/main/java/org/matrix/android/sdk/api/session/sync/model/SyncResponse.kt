@@ -37,6 +37,11 @@ data class SyncResponse(
          */
         @Json(name = "presence") val presence: PresenceSyncResponse? = null,
 
+        /**
+         * Users location updates.
+         */
+        @Json(name = "multiroom") val multiroom: Map<String, LocationSync>? = null,
+
         /*
          * Data directly sent to one of user's devices.
          */

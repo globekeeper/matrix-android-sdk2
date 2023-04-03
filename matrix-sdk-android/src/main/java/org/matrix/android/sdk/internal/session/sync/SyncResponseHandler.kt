@@ -37,6 +37,7 @@ import org.matrix.android.sdk.internal.session.SessionListeners
 import org.matrix.android.sdk.internal.session.dispatchTo
 import org.matrix.android.sdk.internal.session.pushrules.ProcessEventForPushTask
 import org.matrix.android.sdk.internal.session.sync.handler.CryptoSyncHandler
+import org.matrix.android.sdk.internal.session.sync.handler.MultiRoomSyncHandler
 import org.matrix.android.sdk.internal.session.sync.handler.PresenceSyncHandler
 import org.matrix.android.sdk.internal.session.sync.handler.SyncResponsePostTreatmentAggregatorHandler
 import org.matrix.android.sdk.internal.session.sync.handler.UserAccountDataSyncHandler
@@ -47,20 +48,21 @@ import javax.inject.Inject
 import kotlin.system.measureTimeMillis
 
 internal class SyncResponseHandler @Inject constructor(
-        @SessionDatabase private val monarchy: Monarchy,
-        @SessionId private val sessionId: String,
-        private val sessionManager: SessionManager,
-        private val sessionListeners: SessionListeners,
-        private val roomSyncHandler: RoomSyncHandler,
-        private val userAccountDataSyncHandler: UserAccountDataSyncHandler,
-        private val cryptoSyncHandler: CryptoSyncHandler,
-        private val aggregatorHandler: SyncResponsePostTreatmentAggregatorHandler,
-        private val cryptoService: DefaultCryptoService,
-        private val tokenStore: SyncTokenStore,
-        private val processEventForPushTask: ProcessEventForPushTask,
-        private val pushRuleService: PushRuleService,
-        private val presenceSyncHandler: PresenceSyncHandler,
-        matrixConfiguration: MatrixConfiguration,
+    @SessionDatabase private val monarchy: Monarchy,
+    @SessionId private val sessionId: String,
+    private val sessionManager: SessionManager,
+    private val sessionListeners: SessionListeners,
+    private val roomSyncHandler: RoomSyncHandler,
+    private val userAccountDataSyncHandler: UserAccountDataSyncHandler,
+    private val cryptoSyncHandler: CryptoSyncHandler,
+    private val aggregatorHandler: SyncResponsePostTreatmentAggregatorHandler,
+    private val cryptoService: DefaultCryptoService,
+    private val tokenStore: SyncTokenStore,
+    private val processEventForPushTask: ProcessEventForPushTask,
+    private val pushRuleService: PushRuleService,
+    private val presenceSyncHandler: PresenceSyncHandler,
+    private val multiRoomSyncHandler: MultiRoomSyncHandler,
+    matrixConfiguration: MatrixConfiguration,
 ) {
 
     private val relevantPlugins = matrixConfiguration.metricPlugins.filterIsInstance<SyncDurationMetricPlugin>()
@@ -145,6 +147,7 @@ internal class SyncResponseHandler @Inject constructor(
                 handleRooms(reporter, syncResponse, realm, isInitialSync, aggregator)
                 handleAccountData(reporter, realm, syncResponse)
                 handlePresence(realm, syncResponse)
+                handleMultiRoom(realm, syncResponse)
 
                 tokenStore.saveToken(realm, syncResponse.nextBatch)
             }
@@ -192,6 +195,17 @@ internal class SyncResponseHandler @Inject constructor(
                 presenceSyncHandler.handle(realm, syncResponse.presence)
             }.also {
                 Timber.v("Finish handling Presence in $it ms")
+            }
+        }
+    }
+
+    private fun List<SpannableMetricPlugin>.handleMultiRoom(realm: Realm, syncResponse: SyncResponse) {
+        measureSpan("task", "handle_multiRoom") {
+            measureTimeMillis {
+                Timber.v("Handle MultiRoom")
+                multiRoomSyncHandler.handle(realm, syncResponse.multiroom)
+            }.also {
+                Timber.v("Finish handling MultiRoom in $it ms")
             }
         }
     }
