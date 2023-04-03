@@ -1,28 +1,34 @@
 package org.matrix.android.sdk.internal.session.multiroomlocation
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.zhuinden.monarchy.Monarchy
+import io.realm.kotlin.where
 import org.matrix.android.sdk.api.util.Optional
 import org.matrix.android.sdk.api.util.toOptional
+import org.matrix.android.sdk.internal.database.mapper.UserLocationSummary
+import org.matrix.android.sdk.internal.database.mapper.asDomain
+import org.matrix.android.sdk.internal.database.model.location.UserLocationEntity
+import org.matrix.android.sdk.internal.database.model.location.UserLocationEntityFields
 import org.matrix.android.sdk.internal.di.SessionDatabase
 import javax.inject.Inject
 
 internal class MultiRoomLocationsDataSource @Inject constructor(
     @SessionDatabase private val monarchy: Monarchy
 ) {
-    // Will fetch data from DB
-    fun getMultiRoomLocationsLive(): LiveData<Optional<Boolean>> {
-        /*val liveData = monarchy.findAllMappedWithChanges(
-            { realm -> RoomSummaryEntity.where(realm, roomId).isNotEmpty(RoomSummaryEntityFields.DISPLAY_NAME) },
-            { roomSummaryMapper.map(it) }
+    fun getMultiRoomLocationsLive(userIds: List<String>): LiveData<Optional<UserLocationSummary>> {
+        val liveData = monarchy.findAllMappedWithChanges(
+            { realm ->
+                realm
+                    .where<UserLocationEntity>()
+                    .`in`(UserLocationEntityFields.USER_ID, userIds.distinct().toTypedArray())
+            },
+            {
+                it.asDomain()
+            }
         )
         return Transformations.map(liveData) { results ->
             results.firstOrNull().toOptional()
-        }*/
-        return Transformations.map(MutableLiveData<Boolean>().apply { postValue(true)}) { results ->
-            results.toOptional()
         }
     }
 }
