@@ -48,21 +48,21 @@ import javax.inject.Inject
 import kotlin.system.measureTimeMillis
 
 internal class SyncResponseHandler @Inject constructor(
-    @SessionDatabase private val monarchy: Monarchy,
-    @SessionId private val sessionId: String,
-    private val sessionManager: SessionManager,
-    private val sessionListeners: SessionListeners,
-    private val roomSyncHandler: RoomSyncHandler,
-    private val userAccountDataSyncHandler: UserAccountDataSyncHandler,
-    private val cryptoSyncHandler: CryptoSyncHandler,
-    private val aggregatorHandler: SyncResponsePostTreatmentAggregatorHandler,
-    private val cryptoService: DefaultCryptoService,
-    private val tokenStore: SyncTokenStore,
-    private val processEventForPushTask: ProcessEventForPushTask,
-    private val pushRuleService: PushRuleService,
-    private val presenceSyncHandler: PresenceSyncHandler,
-    private val multiRoomSyncHandler: MultiRoomSyncHandler,
-    matrixConfiguration: MatrixConfiguration,
+        @SessionDatabase private val monarchy: Monarchy,
+        @SessionId private val sessionId: String,
+        private val sessionManager: SessionManager,
+        private val sessionListeners: SessionListeners,
+        private val roomSyncHandler: RoomSyncHandler,
+        private val userAccountDataSyncHandler: UserAccountDataSyncHandler,
+        private val cryptoSyncHandler: CryptoSyncHandler,
+        private val aggregatorHandler: SyncResponsePostTreatmentAggregatorHandler,
+        private val cryptoService: DefaultCryptoService,
+        private val tokenStore: SyncTokenStore,
+        private val processEventForPushTask: ProcessEventForPushTask,
+        private val pushRuleService: PushRuleService,
+        private val presenceSyncHandler: PresenceSyncHandler,
+        private val multiRoomSyncHandler: MultiRoomSyncHandler,
+        matrixConfiguration: MatrixConfiguration,
 ) {
 
     private val relevantPlugins = matrixConfiguration.metricPlugins.filterIsInstance<SyncDurationMetricPlugin>()
