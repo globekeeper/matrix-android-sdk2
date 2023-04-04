@@ -37,6 +37,7 @@ import org.matrix.android.sdk.internal.session.SessionListeners
 import org.matrix.android.sdk.internal.session.dispatchTo
 import org.matrix.android.sdk.internal.session.pushrules.ProcessEventForPushTask
 import org.matrix.android.sdk.internal.session.sync.handler.CryptoSyncHandler
+import org.matrix.android.sdk.internal.session.sync.handler.MultiRoomSyncHandler
 import org.matrix.android.sdk.internal.session.sync.handler.PresenceSyncHandler
 import org.matrix.android.sdk.internal.session.sync.handler.SyncResponsePostTreatmentAggregatorHandler
 import org.matrix.android.sdk.internal.session.sync.handler.UserAccountDataSyncHandler
@@ -60,6 +61,7 @@ internal class SyncResponseHandler @Inject constructor(
         private val processEventForPushTask: ProcessEventForPushTask,
         private val pushRuleService: PushRuleService,
         private val presenceSyncHandler: PresenceSyncHandler,
+        private val multiRoomSyncHandler: MultiRoomSyncHandler,
         matrixConfiguration: MatrixConfiguration,
 ) {
 
@@ -145,6 +147,7 @@ internal class SyncResponseHandler @Inject constructor(
                 handleRooms(reporter, syncResponse, realm, isInitialSync, aggregator)
                 handleAccountData(reporter, realm, syncResponse)
                 handlePresence(realm, syncResponse)
+                handleMultiRoom(realm, syncResponse)
 
                 tokenStore.saveToken(realm, syncResponse.nextBatch)
             }
@@ -192,6 +195,17 @@ internal class SyncResponseHandler @Inject constructor(
                 presenceSyncHandler.handle(realm, syncResponse.presence)
             }.also {
                 Timber.v("Finish handling Presence in $it ms")
+            }
+        }
+    }
+
+    private fun List<SpannableMetricPlugin>.handleMultiRoom(realm: Realm, syncResponse: SyncResponse) {
+        measureSpan("task", "handle_multiRoom") {
+            measureTimeMillis {
+                Timber.v("Handle MultiRoom")
+                multiRoomSyncHandler.handle(realm, syncResponse.multiroom)
+            }.also {
+                Timber.v("Finish handling MultiRoom in $it ms")
             }
         }
     }
