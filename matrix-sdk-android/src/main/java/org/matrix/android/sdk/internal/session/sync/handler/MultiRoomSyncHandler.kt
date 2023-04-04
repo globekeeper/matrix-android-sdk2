@@ -47,11 +47,7 @@ internal class MultiRoomSyncHandler @Inject constructor(private val matrixConfig
 
     /**
      * Store user location to DB.
-     * Later here we can update other tables accordingly.
      */
     private fun storeLocationToDB(realm: Realm, userLocationEntity: UserLocationEntity) =
-            realm.copyToRealmOrUpdate(userLocationEntity)?.apply {
-//                RoomSummaryEntity.updateDirectUserPresence(realm, userPresenceEntity.userId, this)
-//                RoomMemberSummaryEntity.updateUserPresence(realm, userPresenceEntity.userId, this)
-            }
+            realm.copyToRealmOrUpdate(userLocationEntity)
 }

@@ -6,11 +6,6 @@ import dagger.Module
 @Module
 internal abstract class MultiRoomModule {
 
-    @Module
-    companion object {
-        // Do providers here if necessary
-    }
-
     @Binds
     abstract fun bindMultiRoomService(service: DefaultMultiRoomService): MultiRoomService
 }
