@@ -335,5 +335,5 @@ interface Session {
     /**
      * Returns the MultiRoomService associated with the session.
      */
-    fun multiRoomLocationsService(): MultiRoomService
+    fun multiRoomService(): MultiRoomService
 }

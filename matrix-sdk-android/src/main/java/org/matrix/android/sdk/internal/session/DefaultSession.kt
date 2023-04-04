@@ -285,5 +285,5 @@ internal class DefaultSession @Inject constructor(
         )
     }
 
-    override fun multiRoomLocationsService(): MultiRoomService = multiRoomService.get()
+    override fun multiRoomService(): MultiRoomService = multiRoomService.get()
 }
