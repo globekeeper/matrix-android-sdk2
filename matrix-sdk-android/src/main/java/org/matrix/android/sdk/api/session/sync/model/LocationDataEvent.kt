@@ -26,5 +26,5 @@ import org.matrix.android.sdk.api.session.events.model.Content
 @JsonClass(generateAdapter = true)
 data class LocationDataEvent(
         @Json(name = "content") val content: Content?,
-        @Json(name = "timestamp") val timestamp: Long?
+        @Json(name = "origin_server_ts") val originServerTs: Long?
 )

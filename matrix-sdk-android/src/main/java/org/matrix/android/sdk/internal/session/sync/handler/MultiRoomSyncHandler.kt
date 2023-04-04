@@ -36,9 +36,9 @@ internal class MultiRoomSyncHandler @Inject constructor(private val matrixConfig
                     val userLocationEntity = UserLocationEntity(
                         userId = userId,
                         locationContent = locationContent,
-                        locationTimestamp = location?.timestamp,
+                        locationTimestamp = location?.originServerTs,
                         panicContent = panicContent,
-                        panicTimestamp = panic?.timestamp
+                        panicTimestamp = panic?.originServerTs
                     )
 
                     storeLocationToDB(realm, userLocationEntity)
