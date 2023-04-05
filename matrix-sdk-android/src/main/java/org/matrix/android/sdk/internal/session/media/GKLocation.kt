@@ -8,7 +8,6 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 @JsonClass(generateAdapter = true)
 data class GKLocation(val type: String,
-                      val time: Long,
                       @Json(name = "geometry") val geometry: Geometry,
                       @Json(name = "properties") val properties: Properties) : Parcelable
 
