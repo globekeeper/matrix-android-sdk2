@@ -19,7 +19,7 @@ data class Geometry(val type: String, val coordinates: List<String>) : Parcelabl
 @JsonClass(generateAdapter = true)
 data class Properties(val name: String?,
                       val visible: Boolean?,
-                      val vAccuracy: Float?,
-                      val hAccuracy: Float?,
-                      val speed: Float?,
-                      val altitude: Double?) : Parcelable
+                      val vAccuracy: Int?,
+                      val hAccuracy: Int?,
+                      val speed: Int?,
+                      val altitude: Int?) : Parcelable
