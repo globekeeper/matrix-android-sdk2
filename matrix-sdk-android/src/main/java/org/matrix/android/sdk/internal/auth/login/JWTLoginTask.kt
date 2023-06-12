@@ -34,29 +34,34 @@ import org.matrix.android.sdk.api.auth.data.LoginFlowTypes
 import org.matrix.android.sdk.internal.auth.data.TokenLoginParams
 import javax.inject.Inject
 
-internal interface DirectTokenLoginTask : Task<DirectTokenLoginTask.Params, Session> {
+internal interface JWTLoginTask : Task<JWTLoginTask.Params, Session> {
     data class Params(
             val homeServerConnectionConfig: HomeServerConnectionConfig,
             val token: String,
+            val deviceName: String?,
             val deviceId: String
     )
 }
 
-internal class DefaultDirectTokenLoginTask @Inject constructor(
+internal class DefaultJWTLoginTask @Inject constructor(
         @Unauthenticated
         private val okHttpClient: Lazy<OkHttpClient>,
         private val retrofitFactory: RetrofitFactory,
         private val sessionCreator: SessionCreator
-) : DirectTokenLoginTask {
+) : JWTLoginTask {
 
-    override suspend fun execute(params: DirectTokenLoginTask.Params): Session {
+    override suspend fun execute(params: JWTLoginTask.Params): Session {
         val client = buildClient(params.homeServerConnectionConfig)
         val homeServerUrl = params.homeServerConnectionConfig.homeServerUriBase.toString()
 
         val authAPI = retrofitFactory.create(client, homeServerUrl)
                 .create(AuthAPI::class.java)
 
-        val loginParams = TokenLoginParams(LoginFlowTypes.JWT, params.token, params.deviceId)
+        val loginParams = TokenLoginParams(
+            type = LoginFlowTypes.JWT,
+            token = params.token,
+            deviceDisplayName = params.deviceName,
+            deviceId = params.deviceId)
 
         val credentials = try {
             executeRequest(null) {
@@ -72,7 +77,7 @@ internal class DefaultDirectTokenLoginTask @Inject constructor(
             }
         }
 
-        return sessionCreator.createSession(credentials, params.homeServerConnectionConfig, LoginType.DIRECT)
+        return sessionCreator.createSession(credentials, params.homeServerConnectionConfig, LoginType.JWT)
     }
 
     private fun buildClient(homeServerConnectionConfig: HomeServerConnectionConfig): OkHttpClient {

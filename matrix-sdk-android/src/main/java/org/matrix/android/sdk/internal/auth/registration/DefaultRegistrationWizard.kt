@@ -91,12 +91,14 @@ internal class DefaultRegistrationWizard(
                                          id_server: String,
                                          userName: String?,
                                          deviceId: String,
-                                         password: String): RegistrationResult {
+                                         password: String,
+                                         initialDeviceDisplayName: String?): RegistrationResult {
         val safeSession = pendingSessionData.currentSession
         val threePidCredentials = ThreePidCredentials(clientSecret = clientSecret, sid = sid, idServer = id_server)
         val params = RegistrationParams(
             username = userName,
             password = password,
+            initialDeviceDisplayName = initialDeviceDisplayName,
             deviceId = deviceId,
             auth = AuthParams(type = EMAIL_IDENTITY,
             threePidCredentials = threePidCredentials,

@@ -40,7 +40,7 @@ import org.matrix.android.sdk.internal.auth.data.WebClientConfig
 import org.matrix.android.sdk.internal.auth.db.PendingSessionData
 import org.matrix.android.sdk.internal.auth.login.DefaultLoginWizard
 import org.matrix.android.sdk.internal.auth.login.DirectLoginTask
-import org.matrix.android.sdk.internal.auth.login.DirectTokenLoginTask
+import org.matrix.android.sdk.internal.auth.login.JWTLoginTask
 import org.matrix.android.sdk.internal.auth.login.QrLoginTokenTask
 import org.matrix.android.sdk.internal.auth.registration.DefaultRegistrationWizard
 import org.matrix.android.sdk.internal.auth.version.Versions
@@ -68,7 +68,7 @@ internal class DefaultAuthenticationService @Inject constructor(
         private val getWellknownTask: GetWellknownTask,
         private val directLoginTask: DirectLoginTask,
         private val qrLoginTokenTask: QrLoginTokenTask,
-        private val directTokenLoginTask: DirectTokenLoginTask
+        private val jwtLoginTask: JWTLoginTask
 ) : AuthenticationService {
 
     private var pendingSessionData: PendingSessionData? = pendingSessionStore.getPendingSessionData()
@@ -457,12 +457,20 @@ internal class DefaultAuthenticationService @Inject constructor(
         )
     }
 
-    override suspend fun directTokenAuthentication(
+    override suspend fun loginUsingJWT(
         homeServerConnectionConfig: HomeServerConnectionConfig,
         token: String,
+        initialDeviceName: String?,
         deviceId: String
     ): Session {
-        return directTokenLoginTask.execute(DirectTokenLoginTask.Params(homeServerConnectionConfig, token, deviceId))
+        return jwtLoginTask.execute(
+            JWTLoginTask.Params(
+                homeServerConnectionConfig = homeServerConnectionConfig,
+                token = token,
+                deviceName = initialDeviceName,
+                deviceId = deviceId
+            )
+        )
     }
 
     private fun buildAuthAPI(homeServerConnectionConfig: HomeServerConnectionConfig): AuthAPI {

@@ -23,7 +23,8 @@ enum class LoginType {
     CUSTOM,
     DIRECT,
     UNKNOWN,
-    QR;
+    QR,
+    JWT;
 
     companion object {
 
@@ -34,6 +35,7 @@ enum class LoginType {
             CUSTOM.name -> CUSTOM
             DIRECT.name -> DIRECT
             QR.name -> QR
+            JWT.name -> JWT
             else -> UNKNOWN
         }
     }

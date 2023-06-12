@@ -66,7 +66,8 @@ interface RegistrationWizard {
                                 id_server: String,
                                 userName: String?,
                                 deviceId: String,
-                                password: String): RegistrationResult
+                                password: String,
+                                initialDeviceDisplayName: String?): RegistrationResult
 
     /**
      * Perform the "m.login.recaptcha" stage.

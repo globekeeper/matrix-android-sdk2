@@ -147,12 +147,15 @@ interface AuthenticationService {
     ): Session
 
     /**
-     * Authenticate with a JWT
+     * Authenticate with a JWT§
      * Usually call this after a successful call to getWellKnownData()
      */
-    suspend fun directTokenAuthentication(homeServerConnectionConfig: HomeServerConnectionConfig,
-                                     token: String,
-                                     deviceId: String): Session
+    suspend fun loginUsingJWT(
+            homeServerConnectionConfig: HomeServerConnectionConfig,
+            token: String,
+            initialDeviceName: String?,
+            deviceId: String
+    ): Session
 
     /**
      * Builds OkHttpClient with certificates and proxy in mind
