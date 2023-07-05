@@ -20,6 +20,7 @@ import org.matrix.android.sdk.api.session.user.model.User
 import org.matrix.android.sdk.internal.network.GlobalErrorReceiver
 import org.matrix.android.sdk.internal.network.executeRequest
 import org.matrix.android.sdk.internal.session.user.SearchUserAPI
+import org.matrix.android.sdk.internal.session.user.UserStatus
 import org.matrix.android.sdk.internal.task.Task
 import javax.inject.Inject
 
@@ -43,7 +44,7 @@ internal class DefaultSearchUserTask @Inject constructor(
         }
         return response.users
             .filterNot {
-                params.excludedUserIds.contains(it.userId)
+                params.excludedUserIds.contains(it.userId) || UserStatus.isNotDeactivatedOrRemoved(it.status)
             }
             .map {
                 User(it.userId, it.displayName, it.avatarUrl)

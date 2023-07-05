@@ -23,5 +23,6 @@ import com.squareup.moshi.JsonClass
 internal data class SearchUser(
         @Json(name = "user_id") val userId: String,
         @Json(name = "display_name") val displayName: String? = null,
-        @Json(name = "avatar_url") val avatarUrl: String? = null
+        @Json(name = "avatar_url") val avatarUrl: String? = null,
+        @Json(name = "status") val status: Int
 )
