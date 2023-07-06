@@ -21,6 +21,7 @@ import com.zhuinden.monarchy.Monarchy
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import org.matrix.android.sdk.api.session.events.model.Content
 import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.room.model.EventAnnotationsSummary
 import org.matrix.android.sdk.api.session.room.model.message.PollType
@@ -34,7 +35,6 @@ import org.matrix.android.sdk.internal.database.mapper.asDomain
 import org.matrix.android.sdk.internal.database.model.EventAnnotationsSummaryEntity
 import org.matrix.android.sdk.internal.database.query.where
 import org.matrix.android.sdk.internal.di.SessionDatabase
-import org.matrix.android.sdk.internal.session.media.GKLocation
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoEventFactory
 import org.matrix.android.sdk.internal.session.room.send.queue.EventSenderProcessor
 import org.matrix.android.sdk.internal.session.room.timeline.TimelineEventDataSource
@@ -134,7 +134,7 @@ internal class DefaultRelationService @AssistedInject constructor(
             autoMarkdown: Boolean,
             showInThread: Boolean,
             rootThreadEventId: String?,
-            location: GKLocation?
+            location: Content?
     ): Cancelable? {
         val event = eventFactory.createReplyTextEvent(
                 roomId = roomId,

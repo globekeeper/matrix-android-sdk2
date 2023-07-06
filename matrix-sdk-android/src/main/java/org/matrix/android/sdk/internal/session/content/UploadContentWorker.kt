@@ -42,7 +42,6 @@ import org.matrix.android.sdk.internal.database.mapper.asDomain
 import org.matrix.android.sdk.internal.network.ProgressRequestBody
 import org.matrix.android.sdk.internal.session.DefaultFileService
 import org.matrix.android.sdk.internal.session.SessionComponent
-import org.matrix.android.sdk.internal.session.media.GKLocation
 import org.matrix.android.sdk.internal.session.room.send.CancelSendTracker
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoIdentifiers
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoRepository

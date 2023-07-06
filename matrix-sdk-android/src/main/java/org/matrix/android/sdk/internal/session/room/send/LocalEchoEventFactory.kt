@@ -69,7 +69,6 @@ import org.matrix.android.sdk.api.session.room.timeline.isReply
 import org.matrix.android.sdk.api.util.TextContent
 import org.matrix.android.sdk.internal.di.UserId
 import org.matrix.android.sdk.internal.session.content.ThumbnailExtractor
-import org.matrix.android.sdk.internal.session.media.GKLocation
 import org.matrix.android.sdk.internal.session.permalinks.PermalinkFactory
 import org.matrix.android.sdk.internal.session.room.send.model.EventRedactBody
 import org.matrix.android.sdk.internal.session.room.send.pills.TextPillsUtils
@@ -97,11 +96,11 @@ internal class LocalEchoEventFactory @Inject constructor(
         private val permalinkFactory: PermalinkFactory,
         private val clock: Clock,
 ) {
-    fun createTextEvent(roomId: String, msgType: String, text: CharSequence, autoMarkdown: Boolean, additionalContent: Content? = null, location: GKLocation? = null): Event {
+    fun createTextEvent(roomId: String, msgType: String, text: CharSequence, autoMarkdown: Boolean, additionalContent: Content? = null, location: Content? = null): Event {
         if (msgType == MessageType.MSGTYPE_TEXT || msgType == MessageType.MSGTYPE_EMOTE) {
             return createFormattedTextEvent(roomId, createTextContent(text, autoMarkdown), msgType, additionalContent, location)
         }
-        val content = MessageTextContent(msgType = msgType, body = text.toString(), location = location?.toContent())
+        val content = MessageTextContent(msgType = msgType, body = text.toString(), location = location)
         return createMessageEvent(roomId, content, additionalContent)
     }
 
@@ -118,7 +117,7 @@ internal class LocalEchoEventFactory @Inject constructor(
         return TextContent(text.toString())
     }
 
-    fun createFormattedTextEvent(roomId: String, textContent: TextContent, msgType: String, additionalContent: Content? = null, location: GKLocation? = null): Event {
+    fun createFormattedTextEvent(roomId: String, textContent: TextContent, msgType: String, additionalContent: Content? = null, location: Content? = null): Event {
         return createMessageEvent(roomId, textContent.toMessageTextContent(msgType, location), additionalContent)
     }
 
@@ -363,7 +362,7 @@ internal class LocalEchoEventFactory @Inject constructor(
             rootThreadEventId: String?,
             relatesTo: RelationDefaultContent?,
             additionalContent: Content? = null,
-            location: GKLocation?
+            location: Content?
     ): Event {
         return when (attachment.type) {
             ContentAttachmentData.Type.IMAGE -> createImageEvent(roomId, attachment, rootThreadEventId, relatesTo, additionalContent, location)
@@ -416,7 +415,7 @@ internal class LocalEchoEventFactory @Inject constructor(
             rootThreadEventId: String?,
             relatesTo: RelationDefaultContent?,
             additionalContent: Content?,
-            location: GKLocation?
+            location: Content?
     ): Event {
         var width = attachment.width
         var height = attachment.height
@@ -444,7 +443,7 @@ internal class LocalEchoEventFactory @Inject constructor(
                 ),
                 url = attachment.queryUri.toString(),
                 relatesTo = relatesTo ?: rootThreadEventId?.let { generateThreadRelationContent(it) },
-                location = location?.toContent()
+                location = location
         )
         return createMessageEvent(roomId, content, additionalContent)
     }
@@ -455,7 +454,7 @@ internal class LocalEchoEventFactory @Inject constructor(
             rootThreadEventId: String?,
             relatesTo: RelationDefaultContent?,
             additionalContent: Content?,
-            location: GKLocation?
+            location: Content?
     ): Event {
         val mediaDataRetriever = MediaMetadataRetriever()
         mediaDataRetriever.setDataSource(context, attachment.queryUri)
@@ -490,7 +489,7 @@ internal class LocalEchoEventFactory @Inject constructor(
                 ),
                 url = attachment.queryUri.toString(),
                 relatesTo = relatesTo ?: rootThreadEventId?.let { generateThreadRelationContent(it) },
-                location = location?.toContent()
+                location = location
         )
         return createMessageEvent(roomId, content, additionalContent)
     }
@@ -502,7 +501,7 @@ internal class LocalEchoEventFactory @Inject constructor(
             rootThreadEventId: String?,
             relatesTo: RelationDefaultContent?,
             additionalContent: Content?,
-            location: GKLocation?
+            location: Content?
     ): Event {
         val content = MessageAudioContent(
                 msgType = MessageType.MSGTYPE_AUDIO,
@@ -519,7 +518,7 @@ internal class LocalEchoEventFactory @Inject constructor(
                 ),
                 voiceMessageIndicator = if (!isVoiceMessage) null else emptyMap(),
                 relatesTo = relatesTo ?: rootThreadEventId?.let { generateThreadRelationContent(it) },
-                location = location?.toContent()
+                location = location
         )
         return createMessageEvent(roomId, content, additionalContent)
     }
@@ -530,7 +529,7 @@ internal class LocalEchoEventFactory @Inject constructor(
             rootThreadEventId: String?,
             relatesTo: RelationDefaultContent?,
             additionalContent: Content?,
-            location: GKLocation?
+            location: Content?
     ): Event {
         val content = MessageFileContent(
                 msgType = MessageType.MSGTYPE_FILE,
@@ -541,7 +540,7 @@ internal class LocalEchoEventFactory @Inject constructor(
                 ),
                 url = attachment.queryUri.toString(),
                 relatesTo = relatesTo ?: rootThreadEventId?.let { generateThreadRelationContent(it) },
-                location = location?.toContent()
+                location = location
         )
         return createMessageEvent(roomId, content, additionalContent)
     }
@@ -621,7 +620,7 @@ internal class LocalEchoEventFactory @Inject constructor(
             rootThreadEventId: String? = null,
             showInThread: Boolean,
             isRedactedEvent: Boolean = false,
-            location: GKLocation? = null
+            location: Content? = null
     ): MessageContent? {
         // Fallbacks and event representation
         // TODO Add error/warning logs when any of this is null
@@ -658,7 +657,7 @@ internal class LocalEchoEventFactory @Inject constructor(
                         rootThreadEventId = rootThreadEventId,
                         showInThread = showInThread
                 ),
-                location = location?.toContent()
+                location = location
         )
     }
 
@@ -674,7 +673,7 @@ internal class LocalEchoEventFactory @Inject constructor(
             rootThreadEventId: String? = null,
             showInThread: Boolean,
             additionalContent: Content? = null,
-            location: GKLocation? = null
+            location: Content? = null
     ): Event? {
         val content = createReplyTextContent(eventReplied, replyText, replyTextFormatted, autoMarkdown, rootThreadEventId, showInThread, location = location)
         return content?.let {

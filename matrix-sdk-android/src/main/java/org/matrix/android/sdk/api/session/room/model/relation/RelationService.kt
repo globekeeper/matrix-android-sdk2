@@ -16,6 +16,7 @@
 package org.matrix.android.sdk.api.session.room.model.relation
 
 import androidx.lifecycle.LiveData
+import org.matrix.android.sdk.api.session.events.model.Content
 import org.matrix.android.sdk.api.session.events.model.Event
 import org.matrix.android.sdk.api.session.room.model.EventAnnotationsSummary
 import org.matrix.android.sdk.api.session.room.model.message.MessageType
@@ -23,7 +24,6 @@ import org.matrix.android.sdk.api.session.room.model.message.PollType
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
 import org.matrix.android.sdk.api.util.Cancelable
 import org.matrix.android.sdk.api.util.Optional
-import org.matrix.android.sdk.internal.session.media.GKLocation
 
 /**
  * In some cases, events may wish to reference other events.
@@ -150,7 +150,7 @@ interface RelationService {
             autoMarkdown: Boolean = false,
             showInThread: Boolean = false,
             rootThreadEventId: String? = null,
-            location: GKLocation? = null
+            location: Content? = null
     ): Cancelable?
 
     /**

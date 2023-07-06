@@ -42,7 +42,6 @@ import org.matrix.android.sdk.internal.crypto.store.IMXCryptoStore
 import org.matrix.android.sdk.internal.di.SessionId
 import org.matrix.android.sdk.internal.di.WorkManagerProvider
 import org.matrix.android.sdk.internal.session.content.UploadContentWorker
-import org.matrix.android.sdk.internal.session.media.GKLocation
 import org.matrix.android.sdk.internal.session.room.send.queue.EventSenderProcessor
 import org.matrix.android.sdk.internal.task.TaskExecutor
 import org.matrix.android.sdk.internal.util.CancelableWork
@@ -79,7 +78,7 @@ internal class DefaultSendService @AssistedInject constructor(
                 .let { sendEvent(it) }
     }
 
-    override fun sendTextMessage(text: CharSequence, msgType: String, autoMarkdown: Boolean, additionalContent: Content?, location: GKLocation?): Cancelable {
+    override fun sendTextMessage(text: CharSequence, msgType: String, autoMarkdown: Boolean, additionalContent: Content?, location: Content?): Cancelable {
         return localEchoEventFactory.createTextEvent(roomId, msgType, text, autoMarkdown, additionalContent, location)
                 .also { createLocalEcho(it) }
                 .let { sendEvent(it) }
@@ -137,17 +136,17 @@ internal class DefaultSendService @AssistedInject constructor(
         return eventSenderProcessor.postRedaction(redactionEcho, reason, withRelations)
     }
 
-    override fun resendTextMessage(localEcho: TimelineEvent, location: GKLocation?): Cancelable {
+    override fun resendTextMessage(localEcho: TimelineEvent, location: Content?): Cancelable {
         if (localEcho.root.isTextMessage() && localEcho.root.sendState.hasFailed()) {
             localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-            val updatedContent = localEcho.root.getClearContent()?.toModel<MessageTextContent>()?.copy(location = location?.toContent())
+            val updatedContent = localEcho.root.getClearContent()?.toModel<MessageTextContent>()?.copy(location = location)
             val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
             return sendEvent(updatedEvent)
         }
         return NoOpCancellable
     }
 
-    override fun resendMediaMessage(localEcho: TimelineEvent, gkLocation: GKLocation?): Cancelable {
+    override fun resendMediaMessage(localEcho: TimelineEvent, gkLocation: Content?): Cancelable {
         if (localEcho.root.sendState.hasFailed()) {
             val clearContent = localEcho.root.getClearContent()
             val messageContent = clearContent?.toModel<MessageContent>() as? MessageWithAttachmentContent ?: return NoOpCancellable
@@ -173,7 +172,7 @@ internal class DefaultSendService @AssistedInject constructor(
                             type = ContentAttachmentData.Type.IMAGE
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    val updatedContent = messageContent.copy(location = gkLocation?.toContent())
+                    val updatedContent = messageContent.copy(location = gkLocation)
                     val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
                     internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }
@@ -189,7 +188,7 @@ internal class DefaultSendService @AssistedInject constructor(
                             type = ContentAttachmentData.Type.VIDEO
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    val updatedContent = messageContent.copy(location = gkLocation?.toContent())
+                    val updatedContent = messageContent.copy(location = gkLocation)
                     val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
                     internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }
@@ -202,7 +201,7 @@ internal class DefaultSendService @AssistedInject constructor(
                             type = ContentAttachmentData.Type.FILE
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    val updatedContent = messageContent.copy(location = gkLocation?.toContent())
+                    val updatedContent = messageContent.copy(location = gkLocation)
                     val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
                     internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }
@@ -217,7 +216,7 @@ internal class DefaultSendService @AssistedInject constructor(
                             waveform = messageContent.audioWaveformInfo?.waveform?.filterNotNull()
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    val updatedContent = messageContent.copy(location = gkLocation?.toContent())
+                    val updatedContent = messageContent.copy(location = gkLocation)
                     val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
                     internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }
@@ -242,7 +241,7 @@ internal class DefaultSendService @AssistedInject constructor(
         }
     }
 
-    override fun resendAllFailedMessages(location: GKLocation?) {
+    override fun resendAllFailedMessages(location: Content?) {
         taskExecutor.executorScope.launch {
             val eventsToResend = localEchoRepository.getAllFailedEventsToResend(roomId)
             eventsToResend.forEach {
@@ -270,7 +269,7 @@ internal class DefaultSendService @AssistedInject constructor(
             roomIds: Set<String>,
             rootThreadEventId: String?,
             additionalContent: Content?,
-            location: GKLocation?
+            location: Content?
     ): Cancelable {
         return attachments.mapTo(CancelableBag()) {
             sendMedia(
@@ -290,7 +289,7 @@ internal class DefaultSendService @AssistedInject constructor(
             rootThreadEventId: String?,
             relatesTo: RelationDefaultContent?,
             additionalContent: Content?,
-            location: GKLocation?
+            location: Content?
     ): Cancelable {
         // Ensure that the event will not be send in a thread if we are a different flow.
         // Like sending files to multiple rooms

@@ -24,7 +24,6 @@ import org.matrix.android.sdk.api.session.room.model.message.PollType
 import org.matrix.android.sdk.api.session.room.model.relation.RelationDefaultContent
 import org.matrix.android.sdk.api.session.room.timeline.TimelineEvent
 import org.matrix.android.sdk.api.util.Cancelable
-import org.matrix.android.sdk.internal.session.media.GKLocation
 
 /**
  * This interface defines methods to send events in a room. It's implemented at the room level.
@@ -54,7 +53,7 @@ interface SendService {
             msgType: String = MessageType.MSGTYPE_TEXT,
             autoMarkdown: Boolean = false,
             additionalContent: Content? = null,
-            location: GKLocation? = null
+            location: Content? = null
     ): Cancelable
 
     /**
@@ -109,7 +108,7 @@ interface SendService {
             rootThreadEventId: String? = null,
             relatesTo: RelationDefaultContent? = null,
             additionalContent: Content? = null,
-            location: GKLocation? = null
+            location: Content? = null
     ): Cancelable
 
     /**
@@ -128,7 +127,7 @@ interface SendService {
             roomIds: Set<String>,
             rootThreadEventId: String? = null,
             additionalContent: Content? = null,
-            location: GKLocation? = null
+            location: Content? = null
     ): Cancelable
 
     /**
@@ -171,14 +170,14 @@ interface SendService {
      * Schedule this message to be resent.
      * @param localEcho the unsent local echo
      */
-    fun resendTextMessage(localEcho: TimelineEvent, location: GKLocation? = null): Cancelable
+    fun resendTextMessage(localEcho: TimelineEvent, location: Content? = null): Cancelable
 
     /**
      * Schedule this message to be resent.
      * @param localEcho the unsent local echo
      * @param gkLocation the unsent Location
      */
-    fun resendMediaMessage(localEcho: TimelineEvent, gkLocation: GKLocation? = null): Cancelable
+    fun resendMediaMessage(localEcho: TimelineEvent, gkLocation: Content? = null): Cancelable
 
     /**
      * Remove this failed message from the timeline.
@@ -194,7 +193,7 @@ interface SendService {
     /**
      * Resend all failed messages one by one (and keep order).
      */
-    fun resendAllFailedMessages(location: GKLocation? = null)
+    fun resendAllFailedMessages(location: Content? = null)
 
     /**
      * Cancel all failed messages.
