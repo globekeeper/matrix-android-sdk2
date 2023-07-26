@@ -8,7 +8,8 @@ import javax.inject.Inject
 
 @SessionScope
 internal class DefaultMultiRoomService @Inject constructor(
-    private val dataSource: MultiRoomLocationsDataSource
+    private val dataSource: MultiRoomLocationsDataSource,
+    private val gkSyncLocationTask: GKSyncLocationTask,
 ): MultiRoomService {
 
     override fun getLiveUserLocations(userIds: List<String>): LiveData<List<UserLocationSummary>> {
@@ -17,5 +18,9 @@ internal class DefaultMultiRoomService @Inject constructor(
 
     override fun getUserLocations(userIds: List<String>): List<UserLocationSummary> {
         return dataSource.getMultiRoomLocations(userIds)
+    }
+    override suspend fun doLocationSyncIfNeeded(roomId: String): Boolean {
+        val syncLocationsParams = GKSyncLocationTask.Params(roomId)
+        return gkSyncLocationTask.execute(syncLocationsParams)
     }
 }
