@@ -53,7 +53,7 @@ interface SendService {
             msgType: String = MessageType.MSGTYPE_TEXT,
             autoMarkdown: Boolean = false,
             additionalContent: Content? = null,
-            location: Content? = null
+            location: Content? = null,
     ): Cancelable
 
     /**
@@ -69,6 +69,7 @@ interface SendService {
             formattedText: String,
             msgType: String = MessageType.MSGTYPE_TEXT,
             additionalContent: Content? = null,
+            location: Content? = null,
     ): Cancelable
 
     /**
@@ -88,6 +89,7 @@ interface SendService {
             autoMarkdown: Boolean,
             rootThreadEventId: String? = null,
             additionalContent: Content? = null,
+            location: Content? = null,
     ): Cancelable
 
     /**
@@ -108,7 +110,7 @@ interface SendService {
             rootThreadEventId: String? = null,
             relatesTo: RelationDefaultContent? = null,
             additionalContent: Content? = null,
-            location: Content? = null
+            location: Content? = null,
     ): Cancelable
 
     /**
@@ -127,7 +129,7 @@ interface SendService {
             roomIds: Set<String>,
             rootThreadEventId: String? = null,
             additionalContent: Content? = null,
-            location: Content? = null
+            location: Content? = null,
     ): Cancelable
 
     /**
@@ -175,9 +177,9 @@ interface SendService {
     /**
      * Schedule this message to be resent.
      * @param localEcho the unsent local echo
-     * @param gkLocation the unsent Location
+     * @param location the unsent Location
      */
-    fun resendMediaMessage(localEcho: TimelineEvent, gkLocation: Content? = null): Cancelable
+    fun resendMediaMessage(localEcho: TimelineEvent, location: Content? = null): Cancelable
 
     /**
      * Remove this failed message from the timeline.
