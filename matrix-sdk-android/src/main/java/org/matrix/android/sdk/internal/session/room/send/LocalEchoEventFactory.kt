@@ -863,6 +863,7 @@ internal class LocalEchoEventFactory @Inject constructor(
             autoMarkdown: Boolean,
             rootThreadEventId: String?,
             additionalContent: Content? = null,
+            location: Content? = null
     ): Event {
         val messageContent = quotedEvent.getLastMessageContent()
         val formattedQuotedText = (messageContent as? MessageContentWithFormattedBody)?.formattedBody
@@ -873,7 +874,8 @@ internal class LocalEchoEventFactory @Inject constructor(
                     textContent.toThreadTextContent(
                             rootThreadEventId = rootThreadEventId,
                             latestThreadEventId = localEchoRepository.getLatestThreadEvent(rootThreadEventId),
-                            msgType = MessageType.MSGTYPE_TEXT
+                            msgType = MessageType.MSGTYPE_TEXT,
+                            location = location
                     ),
                     additionalContent,
             )
@@ -883,6 +885,7 @@ internal class LocalEchoEventFactory @Inject constructor(
                     textContent,
                     MessageType.MSGTYPE_TEXT,
                     additionalContent,
+                    location,
             )
         }
     }

@@ -84,8 +84,8 @@ internal class DefaultSendService @AssistedInject constructor(
                 .let { sendEvent(it) }
     }
 
-    override fun sendFormattedTextMessage(text: String, formattedText: String, msgType: String, additionalContent: Content?): Cancelable {
-        return localEchoEventFactory.createFormattedTextEvent(roomId, TextContent(text, formattedText), msgType, additionalContent)
+    override fun sendFormattedTextMessage(text: String, formattedText: String, msgType: String, additionalContent: Content?, location: Content?): Cancelable {
+        return localEchoEventFactory.createFormattedTextEvent(roomId, TextContent(text, formattedText), msgType, additionalContent, location)
                 .also { createLocalEcho(it) }
                 .let { sendEvent(it) }
     }
@@ -97,6 +97,7 @@ internal class DefaultSendService @AssistedInject constructor(
             autoMarkdown: Boolean,
             rootThreadEventId: String?,
             additionalContent: Content?,
+            location: Content?
     ): Cancelable {
         return localEchoEventFactory.createQuotedTextEvent(
                 roomId = roomId,
@@ -106,6 +107,7 @@ internal class DefaultSendService @AssistedInject constructor(
                 autoMarkdown = autoMarkdown,
                 rootThreadEventId = rootThreadEventId,
                 additionalContent = additionalContent,
+                location = location
         )
                 .also { createLocalEcho(it) }
                 .let { sendEvent(it) }
@@ -146,7 +148,7 @@ internal class DefaultSendService @AssistedInject constructor(
         return NoOpCancellable
     }
 
-    override fun resendMediaMessage(localEcho: TimelineEvent, gkLocation: Content?): Cancelable {
+    override fun resendMediaMessage(localEcho: TimelineEvent, location: Content?): Cancelable {
         if (localEcho.root.sendState.hasFailed()) {
             val clearContent = localEcho.root.getClearContent()
             val messageContent = clearContent?.toModel<MessageContent>() as? MessageWithAttachmentContent ?: return NoOpCancellable
@@ -172,7 +174,7 @@ internal class DefaultSendService @AssistedInject constructor(
                             type = ContentAttachmentData.Type.IMAGE
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    val updatedContent = messageContent.copy(location = gkLocation)
+                    val updatedContent = messageContent.copy(location = location)
                     val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
                     internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }
@@ -188,7 +190,7 @@ internal class DefaultSendService @AssistedInject constructor(
                             type = ContentAttachmentData.Type.VIDEO
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    val updatedContent = messageContent.copy(location = gkLocation)
+                    val updatedContent = messageContent.copy(location = location)
                     val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
                     internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }
@@ -201,7 +203,7 @@ internal class DefaultSendService @AssistedInject constructor(
                             type = ContentAttachmentData.Type.FILE
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    val updatedContent = messageContent.copy(location = gkLocation)
+                    val updatedContent = messageContent.copy(location = location)
                     val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
                     internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }
@@ -216,7 +218,7 @@ internal class DefaultSendService @AssistedInject constructor(
                             waveform = messageContent.audioWaveformInfo?.waveform?.filterNotNull()
                     )
                     localEchoRepository.updateSendState(localEcho.eventId, roomId, SendState.UNSENT)
-                    val updatedContent = messageContent.copy(location = gkLocation)
+                    val updatedContent = messageContent.copy(location = location)
                     val updatedEvent = localEchoRepository.updateContent(localEcho.root, updatedContent.toContent())
                     internalSendMedia(listOf(updatedEvent), attachmentData, true)
                 }

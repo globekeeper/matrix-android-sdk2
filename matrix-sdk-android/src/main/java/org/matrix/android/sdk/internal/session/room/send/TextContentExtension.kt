@@ -45,7 +45,8 @@ internal fun TextContent.toMessageTextContent(msgType: String = MessageType.MSGT
 internal fun TextContent.toThreadTextContent(
         rootThreadEventId: String,
         latestThreadEventId: String,
-        msgType: String = MessageType.MSGTYPE_TEXT
+        msgType: String = MessageType.MSGTYPE_TEXT,
+        location: Content? = null
 ): MessageTextContent {
     return MessageTextContent(
             msgType = msgType,
@@ -59,7 +60,8 @@ internal fun TextContent.toThreadTextContent(
                             eventId = latestThreadEventId
                     )
             ),
-            formattedBody = formattedText
+            formattedBody = formattedText,
+            location = location
     )
 }
 
