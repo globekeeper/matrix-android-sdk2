@@ -35,11 +35,11 @@ import org.matrix.android.sdk.api.extensions.orFalse
 import org.matrix.android.sdk.api.failure.Failure
 import org.matrix.android.sdk.api.failure.isTokenError
 import org.matrix.android.sdk.api.logger.LoggerTag
-import org.matrix.android.sdk.api.session.call.MxCall
+import org.matrix.android.sdk.api.session.livekitcall.MxLivekitCall
 import org.matrix.android.sdk.api.session.sync.SyncState
 import org.matrix.android.sdk.api.session.sync.model.SyncResponse
 import org.matrix.android.sdk.internal.network.NetworkConnectivityChecker
-import org.matrix.android.sdk.internal.session.call.ActiveCallHandler
+import org.matrix.android.sdk.internal.session.livekitcall.ActiveLivekitCallHandler
 import org.matrix.android.sdk.internal.session.sync.SyncTask
 import org.matrix.android.sdk.internal.settings.DefaultLightweightSettingsStorage
 import org.matrix.android.sdk.internal.util.BackgroundDetectionObserver
@@ -60,7 +60,7 @@ internal class SyncThread @Inject constructor(
         private val syncTask: SyncTask,
         private val networkConnectivityChecker: NetworkConnectivityChecker,
         private val backgroundDetectionObserver: BackgroundDetectionObserver,
-        private val activeCallHandler: ActiveCallHandler,
+        private val activeCallHandler: ActiveLivekitCallHandler,
         private val lightweightSettingsStorage: DefaultLightweightSettingsStorage,
         private val matrixConfiguration: MatrixConfiguration,
 ) : Thread("Matrix-SyncThread"), NetworkConnectivityChecker.Listener, BackgroundDetectionObserver.Listener {
@@ -77,7 +77,7 @@ internal class SyncThread @Inject constructor(
     private var retryNoNetworkTask: TimerTask? = null
     private var previousSyncResponseHasToDevice = false
 
-    private val activeCallListObserver = Observer<MutableList<MxCall>> { activeCalls ->
+    private val activeCallListObserver = Observer<MutableList<MxLivekitCall>> { activeCalls ->
         if (activeCalls.isEmpty() && backgroundDetectionObserver.isInBackground) {
             pause()
         }

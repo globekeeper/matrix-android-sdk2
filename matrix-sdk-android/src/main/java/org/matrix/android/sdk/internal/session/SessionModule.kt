@@ -82,6 +82,7 @@ import org.matrix.android.sdk.internal.session.events.DefaultEventService
 import org.matrix.android.sdk.internal.session.homeserver.DefaultHomeServerCapabilitiesService
 import org.matrix.android.sdk.internal.session.identity.DefaultIdentityService
 import org.matrix.android.sdk.internal.session.integrationmanager.IntegrationManager
+import org.matrix.android.sdk.internal.session.livekitcall.LivekitCallEventProcessor
 import org.matrix.android.sdk.internal.session.openid.DefaultOpenIdService
 import org.matrix.android.sdk.internal.session.permalinks.DefaultPermalinkService
 import org.matrix.android.sdk.internal.session.room.EventRelationsAggregationProcessor
@@ -341,6 +342,10 @@ internal abstract class SessionModule {
     @Binds
     @IntoSet
     abstract fun bindCallEventProcessor(processor: CallEventProcessor): EventInsertLiveProcessor
+
+    @Binds
+    @IntoSet
+    abstract fun bindLivekitCallEventProcessor(processor: LivekitCallEventProcessor): EventInsertLiveProcessor
 
     @Binds
     @IntoSet
