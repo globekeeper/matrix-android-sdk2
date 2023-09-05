@@ -44,6 +44,7 @@ import org.matrix.android.sdk.api.session.file.FileService
 import org.matrix.android.sdk.api.session.homeserver.HomeServerCapabilitiesService
 import org.matrix.android.sdk.api.session.identity.IdentityService
 import org.matrix.android.sdk.api.session.integrationmanager.IntegrationManagerService
+import org.matrix.android.sdk.api.session.livekitcall.LivekitCallSignalingService
 import org.matrix.android.sdk.api.session.media.MediaService
 import org.matrix.android.sdk.api.session.openid.OpenIdService
 import org.matrix.android.sdk.api.session.permalinks.PermalinkService
@@ -127,6 +128,7 @@ internal class DefaultSession @Inject constructor(
         private val integrationManagerService: Lazy<IntegrationManagerService>,
         private val thirdPartyService: Lazy<ThirdPartyService>,
         private val callSignalingService: Lazy<CallSignalingService>,
+        private val livekitCallSignalingService: Lazy<LivekitCallSignalingService>,
         private val spaceService: Lazy<SpaceService>,
         private val openIdService: Lazy<OpenIdService>,
         private val presenceService: Lazy<PresenceService>,
@@ -228,6 +230,7 @@ internal class DefaultSession @Inject constructor(
     override fun mediaService(): MediaService = mediaService.get()
     override fun integrationManagerService(): IntegrationManagerService = integrationManagerService.get()
     override fun callSignalingService(): CallSignalingService = callSignalingService.get()
+    override fun livekitCallSignalingService(): LivekitCallSignalingService = livekitCallSignalingService.get()
     override fun searchService(): SearchService = searchService.get()
     override fun federationService(): FederationService = federationService.get()
     override fun thirdPartyService(): ThirdPartyService = thirdPartyService.get()

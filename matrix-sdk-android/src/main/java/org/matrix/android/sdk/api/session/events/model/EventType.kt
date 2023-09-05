@@ -84,6 +84,19 @@ object EventType {
     const val CALL_NEGOTIATE = "m.call.negotiate"
     const val CALL_REJECT = "m.call.reject"
     const val CALL_HANGUP = "m.call.hangup"
+
+    // Livekit Call Events
+    const val GK_CALL_INVITE = "gk.call.invite"
+    const val GK_CALL_ANSWER = "gk.call.answer"
+    const val GK_CALL_SELECT_ANSWER = "gk.call.select_answer"
+    const val GK_CALL_REJECT = "gk.call.reject"
+    const val GK_CALL_HANGUP = "gk.call.hangup"
+
+    val callInvite = listOf(CALL_INVITE, GK_CALL_INVITE)
+    val callAnswer = listOf(CALL_ANSWER, GK_CALL_ANSWER)
+    val callReject = listOf(CALL_REJECT, GK_CALL_REJECT)
+    val callHangUp = listOf(CALL_HANGUP, GK_CALL_HANGUP)
+
     val CALL_ASSERTED_IDENTITY = StableUnstableId(stable = "m.call.asserted_identity", unstable = "org.matrix.call.asserted_identity")
 
     // This type is not processed by the client, just sent to the server
@@ -126,6 +139,14 @@ object EventType {
                 type == CALL_NEGOTIATE ||
                 type == CALL_REJECT ||
                 type == CALL_REPLACES
+    }
+
+    fun isLivekitCallEvent(type: String): Boolean {
+        return type == GK_CALL_INVITE ||
+                type == GK_CALL_ANSWER ||
+                type == GK_CALL_HANGUP ||
+                type == GK_CALL_SELECT_ANSWER ||
+                type == GK_CALL_REJECT
     }
 
     fun isVerificationEvent(type: String): Boolean {
