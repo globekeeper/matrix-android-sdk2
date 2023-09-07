@@ -10,6 +10,7 @@ import org.matrix.android.sdk.api.util.Optional
 import org.matrix.android.sdk.internal.session.livekitcall.DefaultLivekitCallSignalingService
 import org.matrix.android.sdk.api.session.livekitcall.LivekitCallState
 import org.matrix.android.sdk.api.session.livekitcall.MxLivekitCall
+import org.matrix.android.sdk.api.session.room.model.livekitcall.LivekitCallAnswerContent
 import org.matrix.android.sdk.internal.session.room.send.LocalEchoEventFactory
 import org.matrix.android.sdk.internal.session.room.send.queue.EventSenderProcessor
 import org.matrix.android.sdk.internal.util.time.Clock
@@ -128,10 +129,9 @@ internal class MxLivekitCallImpl(
         Timber.tag(loggerTag.value).v("accept $callId")
         if (isOutgoing) return
         state = LivekitCallState.Answering
-        CallAnswerContent(
+        LivekitCallAnswerContent(
             callId = callId,
             partyId = ourPartyId,
-            answer = CallAnswerContent.Answer(sdp = ""),
             version = MxCall.VOIP_PROTO_VERSION.toString(),
             capabilities = buildCapabilities()
         )

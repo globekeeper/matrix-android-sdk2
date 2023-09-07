@@ -1,11 +1,11 @@
 package org.matrix.android.sdk.api.session.livekitcall
 
-import org.matrix.android.sdk.api.session.room.model.call.CallAnswerContent
 import org.matrix.android.sdk.api.session.room.model.call.CallAssertedIdentityContent
 import org.matrix.android.sdk.api.session.room.model.call.CallHangupContent
 import org.matrix.android.sdk.api.session.room.model.call.CallNegotiateContent
 import org.matrix.android.sdk.api.session.room.model.call.CallRejectContent
 import org.matrix.android.sdk.api.session.room.model.call.CallSelectAnswerContent
+import org.matrix.android.sdk.api.session.room.model.livekitcall.LivekitCallAnswerContent
 import org.matrix.android.sdk.api.session.room.model.livekitcall.LivekitCallInviteContent
 
 interface LivekitCallListener {
@@ -17,7 +17,7 @@ interface LivekitCallListener {
     /**
      * An outgoing call is started.
      */
-    fun onCallAnswerReceived(callAnswerContent: CallAnswerContent)
+    fun onCallAnswerReceived(callAnswerContent: LivekitCallAnswerContent)
 
     /**
      * Called when a called has been hung up.

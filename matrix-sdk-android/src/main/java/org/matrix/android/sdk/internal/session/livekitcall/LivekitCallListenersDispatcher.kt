@@ -3,12 +3,12 @@ package org.matrix.android.sdk.internal.session.livekitcall
 import org.matrix.android.sdk.api.extensions.tryOrNull
 import org.matrix.android.sdk.api.session.livekitcall.LivekitCallListener
 import org.matrix.android.sdk.api.session.livekitcall.MxLivekitCall
-import org.matrix.android.sdk.api.session.room.model.call.CallAnswerContent
 import org.matrix.android.sdk.api.session.room.model.call.CallAssertedIdentityContent
 import org.matrix.android.sdk.api.session.room.model.call.CallHangupContent
 import org.matrix.android.sdk.api.session.room.model.call.CallNegotiateContent
 import org.matrix.android.sdk.api.session.room.model.call.CallRejectContent
 import org.matrix.android.sdk.api.session.room.model.call.CallSelectAnswerContent
+import org.matrix.android.sdk.api.session.room.model.livekitcall.LivekitCallAnswerContent
 import org.matrix.android.sdk.api.session.room.model.livekitcall.LivekitCallInviteContent
 
 /**
@@ -20,7 +20,7 @@ internal class LivekitCallListenersDispatcher(private val listeners: Set<Livekit
         it.onCallInviteReceived(mxCall, callInviteContent)
     }
 
-    override fun onCallAnswerReceived(callAnswerContent: CallAnswerContent) = dispatch {
+    override fun onCallAnswerReceived(callAnswerContent: LivekitCallAnswerContent) = dispatch {
         it.onCallAnswerReceived(callAnswerContent)
     }
 

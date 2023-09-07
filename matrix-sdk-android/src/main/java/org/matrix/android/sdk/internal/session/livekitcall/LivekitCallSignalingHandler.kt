@@ -8,6 +8,7 @@ import org.matrix.android.sdk.api.session.livekitcall.LivekitCallListener
 import org.matrix.android.sdk.api.session.livekitcall.LivekitCallState
 import org.matrix.android.sdk.api.session.livekitcall.MxLivekitCall
 import org.matrix.android.sdk.api.session.room.model.call.*
+import org.matrix.android.sdk.api.session.room.model.livekitcall.LivekitCallAnswerContent
 import org.matrix.android.sdk.api.session.room.model.livekitcall.LivekitCallInviteContent
 import org.matrix.android.sdk.internal.di.UserId
 import org.matrix.android.sdk.internal.session.SessionScope
@@ -166,7 +167,7 @@ internal class LivekitCallSignalingHandler @Inject constructor(
     }
 
     private fun handleCallAnswerEvent(event: Event) {
-        val content = event.getClearContent().toModel<CallAnswerContent>() ?: return
+        val content = event.getClearContent().toModel<LivekitCallAnswerContent>() ?: return
         val call = content.getCall() ?: return
         if (call.ourPartyId == content.partyId) {
             // Ignore remote echo
