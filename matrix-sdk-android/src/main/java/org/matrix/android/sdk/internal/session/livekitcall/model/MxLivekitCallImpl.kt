@@ -50,6 +50,8 @@ internal class MxLivekitCallImpl(
             dispatchStateChange()
         }
 
+    override var originServerTs: Long? = null
+
     private val listeners = mutableListOf<MxLivekitCall.StateListener>()
 
     override fun addListener(listener: MxLivekitCall.StateListener) {

@@ -25,5 +25,9 @@ data class LivekitCallAnswerContent(
         /**
          * Capability advertisement.
          */
-        @Json(name = "capabilities") val capabilities: CallCapabilities? = null
+        @Json(name = "capabilities") val capabilities: CallCapabilities? = null,
+        /**
+         * The timestamp of the answered event.
+         */
+        @Json(name = "origin_server_ts") val originServerTs: Long? = null,
 ) : CallSignalingContent

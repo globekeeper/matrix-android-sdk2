@@ -28,6 +28,11 @@ interface MxLivekitCall : MxLivekitCallDetail {
     var state: LivekitCallState
 
     /**
+     * The timestamp of the answered event.
+     */
+    var originServerTs: Long?
+
+    /**
      * Pick Up the incoming call.
      * It has no effect on outgoing call.
      */

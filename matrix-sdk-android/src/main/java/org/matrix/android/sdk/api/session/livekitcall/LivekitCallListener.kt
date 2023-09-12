@@ -18,7 +18,10 @@ interface LivekitCallListener {
      * An outgoing call is started.
      */
     fun onCallAnswerReceived(callAnswerContent: LivekitCallAnswerContent)
-
+    /**
+     * Called when a call has been answered/accepted. The call timer starts
+     */
+    fun onCallTimerToStart(callAnswerContent: LivekitCallAnswerContent)
     /**
      * Called when a called has been hung up.
      */
