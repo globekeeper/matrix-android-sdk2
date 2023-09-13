@@ -19,7 +19,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:10.11.1"
+        classpath "io.realm:realm-gradle-plugin:10.16.0"
     }
 }
 
@@ -98,6 +98,10 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig true
+    }
+
     adbOptions {
         installOptions "-g"
 //        timeOutInMs 350 * 1000
@@ -109,7 +113,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
         freeCompilerArgs += [
                 // Disabled for now, there are too many errors. Could be handled in another dedicated PR
                 // '-Xexplicit-api=strict', // or warning

@@ -1,21 +1,21 @@
 ext.versions = [
         'minSdk'            : 21,
-        'compileSdk'        : 33,
-        'targetSdk'         : 33,
-        'sourceCompat'      : JavaVersion.VERSION_11,
-        'targetCompat'      : JavaVersion.VERSION_11,
+        'compileSdk'        : 34,
+        'targetSdk'         : 34,
+        'sourceCompat'      : JavaVersion.VERSION_17,
+        'targetCompat'      : JavaVersion.VERSION_17,
 ]
 
-def gradle = "7.4.2"
+def gradle = "8.1.1"
 // Ref: https://kotlinlang.org/releases.html
-def kotlin = "1.8.10"
+def kotlin = "1.9.0"
 def kotlinCoroutines = "1.6.4"
-def dagger = "2.45"
+def dagger = "2.48"
 def firebaseBom = "31.4.0"
 def appDistribution = "16.0.0-beta06"
 def retrofit = "2.9.0"
 def markwon = "4.6.2"
-def moshi = "1.14.0"
+def moshi = "1.15.0"
 def lifecycle = "2.5.1"
 def flowBinding = "1.2.0"
 def flipper = "0.188.0"
