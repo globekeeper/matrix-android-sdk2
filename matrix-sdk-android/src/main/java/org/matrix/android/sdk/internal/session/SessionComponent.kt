@@ -38,6 +38,7 @@ import org.matrix.android.sdk.internal.session.filter.FilterModule
 import org.matrix.android.sdk.internal.session.homeserver.HomeServerCapabilitiesModule
 import org.matrix.android.sdk.internal.session.identity.IdentityModule
 import org.matrix.android.sdk.internal.session.integrationmanager.IntegrationManagerModule
+import org.matrix.android.sdk.internal.session.livekitcall.LivekitCallModule
 import org.matrix.android.sdk.internal.session.media.MediaModule
 import org.matrix.android.sdk.internal.session.multiroomlocation.MultiRoomModule
 import org.matrix.android.sdk.internal.session.openid.OpenIdModule
@@ -92,6 +93,7 @@ import org.matrix.android.sdk.internal.util.system.SystemModule
             AccountModule::class,
             FederationModule::class,
             CallModule::class,
+            LivekitCallModule::class,
             ContentScannerModule::class,
             SearchModule::class,
             ThirdPartyModule::class,

@@ -30,6 +30,10 @@ object RoomSummaryConstants {
             EventType.CALL_HANGUP,
             EventType.CALL_REJECT,
             EventType.CALL_ANSWER,
+            EventType.GK_CALL_INVITE,
+            EventType.GK_CALL_HANGUP,
+            EventType.GK_CALL_REJECT,
+            EventType.GK_CALL_ANSWER,
             EventType.ENCRYPTED,
             EventType.STICKER,
             EventType.REACTION
