@@ -39,6 +39,7 @@ object EventType {
     const val PREVIEW_URLS = "org.matrix.room.preview_urls"
     const val LOCATION = "com.globekeeper.connect.location"
     const val POI = "com.globekeeper.connect.poi"
+    const val PTT = "com.globekeeper.connect.ptt"
 
     // State Events
 
