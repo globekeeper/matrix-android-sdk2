@@ -52,7 +52,7 @@ internal class RealmCryptoStoreMigration @Inject constructor(
         private val clock: Clock,
 ) : MatrixRealmMigration(
         dbName = "Crypto",
-        schemaVersion = 21L,
+        schemaVersion = 20L,
 ) {
     /**
      * Forces all RealmCryptoStoreMigration instances to be equal.
