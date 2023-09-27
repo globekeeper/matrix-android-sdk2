@@ -24,8 +24,8 @@ internal class LivekitCallListenersDispatcher(private val listeners: Set<Livekit
         it.onCallAnswerReceived(callAnswerContent)
     }
 
-    override fun onCallTimerToStart(callAnswerContent: LivekitCallAnswerContent) = dispatch {
-        it.onCallTimerToStart(callAnswerContent)
+    override fun onCallBecomePending(callAnswerContent: LivekitCallAnswerContent) = dispatch {
+        it.onCallBecomePending(callAnswerContent)
     }
 
     override fun onCallHangupReceived(callHangupContent: CallHangupContent) = dispatch {

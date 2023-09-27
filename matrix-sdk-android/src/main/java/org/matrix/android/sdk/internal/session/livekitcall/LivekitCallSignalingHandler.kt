@@ -172,7 +172,7 @@ internal class LivekitCallSignalingHandler @Inject constructor(
             ?: return
         val call = content.getCall() ?: return
         if (call.ourPartyId == content.partyId) {
-            callListenersDispatcher.onCallTimerToStart(content)
+            callListenersDispatcher.onCallBecomePending(content)
             // Ignore remote echo
             return
         }
@@ -191,7 +191,7 @@ internal class LivekitCallSignalingHandler @Inject constructor(
             }
             mxCallFactory.updateOutgoingCallWithOpponentData(call, event.senderId, content, content.capabilities)
             callListenersDispatcher.onCallAnswerReceived(content)
-            callListenersDispatcher.onCallTimerToStart(content)
+            callListenersDispatcher.onCallBecomePending(content)
         }
     }
 

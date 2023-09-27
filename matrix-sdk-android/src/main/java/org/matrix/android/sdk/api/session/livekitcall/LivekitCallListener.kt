@@ -19,9 +19,9 @@ interface LivekitCallListener {
      */
     fun onCallAnswerReceived(callAnswerContent: LivekitCallAnswerContent)
     /**
-     * Called when a call has been answered/accepted. The call timer starts
+     * Called when a call has been answered/accepted. The call becomes pending
      */
-    fun onCallTimerToStart(callAnswerContent: LivekitCallAnswerContent)
+    fun onCallBecomePending(callAnswerContent: LivekitCallAnswerContent)
     /**
      * Called when a called has been hung up.
      */
