@@ -92,5 +92,5 @@ interface LoginWizard {
     suspend fun resetPasswordMailConfirmedGK(newPassword: String,
                                              clientSecret: String,
                                              sid: String,
-                                             idServer: String)
+                                             idServer: String): Session
 }

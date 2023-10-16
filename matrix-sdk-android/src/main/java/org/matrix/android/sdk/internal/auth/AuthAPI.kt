@@ -148,5 +148,5 @@ internal interface AuthAPI {
      * Ask the homeserver to reset the password with the provided new password once the email is validated.
      */
     @POST(NetworkConstants.URI_API_PREFIX_PATH_R0 + "account/password")
-    suspend fun resetPasswordMailConfirmed(@Body params: ResetPasswordMailConfirmed)
+    suspend fun resetPasswordMailConfirmed(@Body params: ResetPasswordMailConfirmed): Credentials
 }

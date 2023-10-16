@@ -152,7 +152,7 @@ internal class DefaultLoginWizard(
         clientSecret: String,
         sid: String,
         idServer: String
-    ) {
+    ): Session {
         val param = ResetPasswordMailConfirmed.create(
             clientSecret,
             sid,
@@ -160,8 +160,10 @@ internal class DefaultLoginWizard(
             true,
             idServer
         )
-        executeRequest(null) {
+        val credentials = executeRequest(null) {
             authAPI.resetPasswordMailConfirmed(param)
         }
+
+        return sessionCreator.createSession(credentials, pendingSessionData.homeServerConnectionConfig, LoginType.CUSTOM)
     }
 }
