@@ -82,10 +82,11 @@ internal class DefaultIdentityService @Inject constructor(
         private val homeServerCapabilitiesService: HomeServerCapabilitiesService,
         private val sign3pidInvitationTask: Sign3pidInvitationTask,
         private val sessionParams: SessionParams
-) : IdentityService, SessionLifecycleObserver {
+) : IdentityService, SessionLifecycleObserver, LifecycleOwner {
 
-    private val lifecycleOwner: LifecycleOwner = LifecycleOwner { lifecycleRegistry }
-    private val lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(lifecycleOwner)
+    private val lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(this)
+    override val lifecycle: Lifecycle
+        get() = lifecycleRegistry
 
     private val listeners = mutableSetOf<IdentityServiceListener>()
 
@@ -94,7 +95,7 @@ internal class DefaultIdentityService @Inject constructor(
         // Observe the account data change
         accountDataDataSource
                 .getLiveAccountDataEvent(UserAccountDataTypes.TYPE_IDENTITY_SERVER)
-                .observeNotNull(lifecycleOwner) {
+                .observeNotNull(this) {
                     notifyIdentityServerUrlChange(it.getOrNull()?.content?.toModel<IdentityServerContent>()?.baseUrl)
                 }
 
