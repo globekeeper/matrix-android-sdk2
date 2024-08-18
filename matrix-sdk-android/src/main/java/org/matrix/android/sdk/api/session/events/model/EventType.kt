@@ -40,6 +40,7 @@ object EventType {
     const val LOCATION = "com.globekeeper.connect.location"
     const val POI = "com.globekeeper.connect.poi"
     const val PTT = "com.globekeeper.connect.ptt"
+    const val BIOMETRIC_AUTH = "com.globekeeper.connect.biometric_login"
 
     // State Events
 
