@@ -18,7 +18,7 @@ package org.matrix.android.sdk.internal.session.room.location
 
 import androidx.arch.core.util.Function
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -271,10 +271,9 @@ internal class DefaultLocationSharingServiceTest {
         )
         val mapper = slot<Function<List<LiveLocationShareAggregatedSummary>, Optional<LiveLocationShareAggregatedSummary>>>()
         every {
-            Transformations.map(
-                    liveData,
-                    capture(mapper)
-            )
+            liveData.map {
+                capture(mapper)
+            }
         } answers {
             val value = secondArg<Function<List<LiveLocationShareAggregatedSummary>, Optional<LiveLocationShareAggregatedSummary>>>().apply(listOf(summary))
             MutableLiveData(value)

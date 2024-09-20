@@ -15,6 +15,9 @@
  */
 package org.matrix.android.sdk.api.util
 
+import androidx.arch.core.util.Function
+import org.matrix.android.sdk.api.session.room.model.livelocation.LiveLocationShareAggregatedSummary
+
 data class Optional<T : Any>(private val value: T?) {
 
     fun get(): T = value!!

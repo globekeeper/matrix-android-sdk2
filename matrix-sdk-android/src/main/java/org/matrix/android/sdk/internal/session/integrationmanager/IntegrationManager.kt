@@ -55,17 +55,17 @@ import javax.inject.Inject
  */
 @SessionScope
 internal class IntegrationManager @Inject constructor(
-        matrixConfiguration: MatrixConfiguration,
-        @SessionDatabase private val monarchy: Monarchy,
-        private val updateUserAccountDataTask: UpdateUserAccountDataTask,
-        private val accountDataDataSource: UserAccountDataDataSource,
-        private val widgetFactory: WidgetFactory
-) :
-        SessionLifecycleObserver {
+    matrixConfiguration: MatrixConfiguration,
+    @SessionDatabase private val monarchy: Monarchy,
+    private val updateUserAccountDataTask: UpdateUserAccountDataTask,
+    private val accountDataDataSource: UserAccountDataDataSource,
+    private val widgetFactory: WidgetFactory,
+) : SessionLifecycleObserver, LifecycleOwner {
 
     private val currentConfigs = ArrayList<IntegrationManagerConfig>()
-    private val lifecycleOwner: LifecycleOwner = LifecycleOwner { lifecycleRegistry }
-    private val lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(lifecycleOwner)
+    private val lifecycleRegistry: LifecycleRegistry
+    override val lifecycle: Lifecycle
+        get() = lifecycleRegistry
 
     private val listeners = HashSet<IntegrationManagerService.Listener>()
     fun addListener(listener: IntegrationManagerService.Listener) = synchronized(listeners) { listeners.add(listener) }
@@ -77,6 +77,7 @@ internal class IntegrationManager @Inject constructor(
                 restUrl = matrixConfiguration.integrationRestUrl,
                 kind = IntegrationManagerConfig.Kind.DEFAULT
         )
+        lifecycleRegistry = LifecycleRegistry(this)
         currentConfigs.add(defaultConfig)
     }
 
@@ -85,7 +86,7 @@ internal class IntegrationManager @Inject constructor(
         observeWellknownConfig()
         accountDataDataSource
                 .getLiveAccountDataEvent(UserAccountDataTypes.TYPE_ALLOWED_WIDGETS)
-                .observeNotNull(lifecycleOwner) {
+                .observeNotNull(this) {
                     val allowedWidgetsContent = it.getOrNull()?.content?.toModel<AllowedWidgetsContent>()
                     if (allowedWidgetsContent != null) {
                         notifyWidgetPermissionsChanged(allowedWidgetsContent)
@@ -93,7 +94,7 @@ internal class IntegrationManager @Inject constructor(
                 }
         accountDataDataSource
                 .getLiveAccountDataEvent(UserAccountDataTypes.TYPE_INTEGRATION_PROVISIONING)
-                .observeNotNull(lifecycleOwner) {
+                .observeNotNull(this) {
                     val integrationProvisioningContent = it.getOrNull()?.content?.toModel<IntegrationProvisioningContent>()
                     if (integrationProvisioningContent != null) {
                         notifyIsEnabledChanged(integrationProvisioningContent)
@@ -101,7 +102,7 @@ internal class IntegrationManager @Inject constructor(
                 }
         accountDataDataSource
                 .getLiveAccountDataEvent(UserAccountDataTypes.TYPE_WIDGETS)
-                .observeNotNull(lifecycleOwner) {
+                .observeNotNull(this) {
                     val integrationManagerContent = it.getOrNull()?.asIntegrationManagerWidgetContent()
                     val config = integrationManagerContent?.extractIntegrationManagerConfig()
                     updateCurrentConfigs(IntegrationManagerConfig.Kind.ACCOUNT, config)
@@ -255,7 +256,7 @@ internal class IntegrationManager @Inject constructor(
                 { it.where(WellknownIntegrationManagerConfigEntity::class.java) },
                 { IntegrationManagerConfig(it.uiUrl, it.apiUrl, IntegrationManagerConfig.Kind.HOMESERVER) }
         )
-        liveData.observeNotNull(lifecycleOwner) {
+        liveData.observeNotNull(this) {
             val config = it.firstOrNull()
             updateCurrentConfigs(IntegrationManagerConfig.Kind.HOMESERVER, config)
         }

@@ -2,32 +2,32 @@ ext.versions = [
         'minSdk'            : 21,
         'compileSdk'        : 34,
         'targetSdk'         : 34,
-        'sourceCompat'      : JavaVersion.VERSION_11,
-        'targetCompat'      : JavaVersion.VERSION_11,
+        'sourceCompat'      : JavaVersion.VERSION_17,
+        'targetCompat'      : JavaVersion.VERSION_17,
 ]
 
-def gradle = "7.4.2"
+def gradle = "8.1.1"
 // Ref: https://kotlinlang.org/releases.html
-def kotlin = "1.8.10"
+def kotlin = "1.9.0"
 def kotlinCoroutines = "1.6.4"
-def dagger = "2.45"
+def dagger = "2.48.1"
 def firebaseBom = "31.4.0"
-def appDistribution = "16.0.0-beta06"
+def appDistribution = "16.0.0-beta09"
 def retrofit = "2.9.0"
 def markwon = "4.6.2"
-def moshi = "1.14.0"
-def lifecycle = "2.5.1"
+def moshi = "1.15.0"
+def lifecycle = "2.6.2"
 def flowBinding = "1.2.0"
 def flipper = "0.188.0"
 def epoxy = "5.0.0"
-def mavericks = "3.0.2"
+def mavericks = "3.0.7"
 def glide = "4.15.1"
 def bigImageViewer = "1.8.1"
 def jjwt = "0.11.5"
 def vanniktechEmoji = "0.16.0"
 def sentry = "6.17.0"
 // Use 1.6.0 alpha to fix issue with test
-def fragment = "1.6.0-alpha08"
+def fragment = "1.6.2"
 // Testing
 def mockk = "1.12.3" // We need to use 1.12.3 to have mocking in androidTest until a new version is released: https://github.com/mockk/mockk/issues/819
 def espresso = "3.5.1"
