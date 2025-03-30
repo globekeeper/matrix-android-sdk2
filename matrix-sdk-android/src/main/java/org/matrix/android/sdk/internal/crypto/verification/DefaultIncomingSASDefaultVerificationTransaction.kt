@@ -202,10 +202,10 @@ internal class DefaultIncomingSASDefaultVerificationTransaction(
 
         shortCodeBytes = calculateSASBytes()
 
-        if (BuildConfig.LOG_PRIVATE_DATA) {
+        /*if (BuildConfig.LOG_PRIVATE_DATA) {
             Timber.v("************  BOB CODE ${getDecimalCodeRepresentation(shortCodeBytes!!)}")
             Timber.v("************  BOB EMOJI CODE ${getShortCodeRepresentation(SasMode.EMOJI)}")
-        }
+        }*/
 
         state = VerificationTxState.ShortCodeReady
     }

@@ -114,9 +114,9 @@ internal class DraftRepository @Inject constructor(
     }
 
     private fun privacySafe(o: Any): Any {
-        if (BuildConfig.LOG_PRIVATE_DATA) {
+        /*if (BuildConfig.LOG_PRIVATE_DATA) {
             return o
-        }
+        }*/
         return ""
     }
 }

@@ -6,16 +6,15 @@ ext.versions = [
         'targetCompat'      : JavaVersion.VERSION_11,
 ]
 
-def gradle = "7.4.2"
-// Ref: https://kotlinlang.org/releases.html
-def kotlin = "1.8.10"
+def gradle = "8.1.1"
+def kotlin = "1.9.0"
 def kotlinCoroutines = "1.6.4"
-def dagger = "2.45"
+def dagger = "2.46"
 def firebaseBom = "31.4.0"
 def appDistribution = "16.0.0-beta06"
 def retrofit = "2.9.0"
 def markwon = "4.6.2"
-def moshi = "1.14.0"
+def moshi = "1.15.2"
 def lifecycle = "2.5.1"
 def flowBinding = "1.2.0"
 def flipper = "0.188.0"
@@ -175,5 +174,3 @@ ext.libs = [
                 'junit'                  : "junit:junit:4.13.2",
         ]
 ]
-
-
