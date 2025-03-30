@@ -1,8 +1,21 @@
-apply plugin: 'kotlin'
-apply plugin: 'java'
+plugins {
+    id 'java-library'
+    id 'kotlin'
+}
 
 sourceCompatibility = versions.sourceCompat
 targetCompatibility = versions.sourceCompat
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
 
 dependencies {
     implementation 'com.squareup:javapoet:1.13.0'
@@ -10,14 +23,13 @@ dependencies {
 
 task javadocJar(type: Jar, dependsOn: 'javadoc') {
     from javadoc.destinationDir
-    classifier = 'javadoc'
+    archiveClassifier.set('javadoc')
 }
 task sourcesJar(type: Jar, dependsOn: 'classes') {
     from sourceSets.main.allSource
-    classifier = 'sources'
+    archiveClassifier.set('sources')
 }
 
 sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
 }
-

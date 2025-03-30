@@ -30,10 +30,10 @@ internal class RealmDebugTools(
         return buildString {
             append("\n$baseName Realm located at : ${realmConfiguration.realmDirectory}/${realmConfiguration.realmFileName}")
 
-            if (BuildConfig.LOG_PRIVATE_DATA) {
+            /*if (BuildConfig.LOG_PRIVATE_DATA) {
                 val key = realmConfiguration.encryptionKey.joinToString("") { byte -> "%02x".format(byte) }
                 append("\n$baseName Realm encryption key : $key")
-            }
+            }*/
 
             Realm.getInstance(realmConfiguration).use { realm ->
                 // Check if we have data

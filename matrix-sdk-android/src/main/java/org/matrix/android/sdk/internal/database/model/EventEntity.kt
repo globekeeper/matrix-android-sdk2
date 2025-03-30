@@ -16,7 +16,6 @@
 
 package org.matrix.android.sdk.internal.database.model
 
-import android.util.Log
 import io.realm.RealmObject
 import io.realm.annotations.Index
 import org.matrix.android.sdk.api.session.crypto.model.MXEventDecryptionResult
@@ -83,7 +82,6 @@ internal open class EventEntity(
     companion object
 
     fun setDecryptionResult(result: MXEventDecryptionResult) {
-        Log.e("setDecryptionResult", "$result")
         assertIsManaged()
         val decryptionResult = OlmDecryptionResult(
                 payload = result.clearEvent,

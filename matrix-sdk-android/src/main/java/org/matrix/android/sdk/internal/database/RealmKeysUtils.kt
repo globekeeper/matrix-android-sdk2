@@ -105,10 +105,10 @@ internal class RealmKeysUtils @Inject constructor(
             createAndSaveKeyForDatabase(alias)
         }
 
-        if (BuildConfig.LOG_PRIVATE_DATA) {
+        /*if (BuildConfig.LOG_PRIVATE_DATA) {
             val log = key.joinToString("") { "%02x".format(it) }
             Timber.w("Database key for alias `$alias`: $log")
-        }
+        }*/
 
         return key
     }

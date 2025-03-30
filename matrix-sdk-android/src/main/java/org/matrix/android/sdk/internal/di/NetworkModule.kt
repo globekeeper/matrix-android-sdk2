@@ -24,7 +24,6 @@ import okhttp3.ConnectionSpec
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
-import okhttp3.logging.HttpLoggingInterceptor
 import org.matrix.android.sdk.BuildConfig
 import org.matrix.android.sdk.api.MatrixConfiguration
 import org.matrix.android.sdk.internal.network.ApiInterceptor
@@ -32,21 +31,20 @@ import org.matrix.android.sdk.internal.network.TimeOutInterceptor
 import org.matrix.android.sdk.internal.network.UserAgentInterceptor
 import org.matrix.android.sdk.internal.network.httpclient.applyMatrixConfiguration
 import org.matrix.android.sdk.internal.network.interceptors.CurlLoggingInterceptor
-import org.matrix.android.sdk.internal.network.interceptors.FormattedJsonHttpLogger
 import java.util.Collections
 import java.util.concurrent.TimeUnit
 
 @Module
 internal object NetworkModule {
 
-    @Provides
+    /*@Provides
     @JvmStatic
     fun providesHttpLoggingInterceptor(): HttpLoggingInterceptor {
         val logger = FormattedJsonHttpLogger(BuildConfig.OKHTTP_LOGGING_LEVEL)
         val interceptor = HttpLoggingInterceptor(logger)
         interceptor.level = BuildConfig.OKHTTP_LOGGING_LEVEL
         return interceptor
-    }
+    }*/
 
     @Provides
     @JvmStatic
@@ -69,8 +67,8 @@ internal object NetworkModule {
             stethoInterceptor: StethoInterceptor,
             timeoutInterceptor: TimeOutInterceptor,
             userAgentInterceptor: UserAgentInterceptor,
-            httpLoggingInterceptor: HttpLoggingInterceptor,
-            curlLoggingInterceptor: CurlLoggingInterceptor,
+        //httpLoggingInterceptor: HttpLoggingInterceptor,
+        //curlLoggingInterceptor: CurlLoggingInterceptor,
             apiInterceptor: ApiInterceptor
     ): OkHttpClient {
         val spec = ConnectionSpec.Builder(matrixConfiguration.connectionSpec).build()
@@ -93,13 +91,13 @@ internal object NetworkModule {
                 }
                 .addInterceptor(timeoutInterceptor)
                 .addInterceptor(userAgentInterceptor)
-                .addInterceptor(httpLoggingInterceptor)
+                //.addInterceptor(httpLoggingInterceptor)
                 .addInterceptor(apiInterceptor)
-                .apply {
+                /*.apply {
                     if (BuildConfig.LOG_PRIVATE_DATA) {
                         addInterceptor(curlLoggingInterceptor)
                     }
-                }
+                }*/
                 .dispatcher(dispatcher)
                 .connectionSpecs(Collections.singletonList(spec))
                 .applyMatrixConfiguration(matrixConfiguration)
